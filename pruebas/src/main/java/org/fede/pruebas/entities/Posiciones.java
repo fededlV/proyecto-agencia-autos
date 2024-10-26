@@ -15,7 +15,7 @@ public class Posiciones {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Integer Id;
 
     @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
@@ -27,7 +27,7 @@ public class Posiciones {
     private Double longitud;
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(name = "id_vehiculo")
     private Vehiculos vehiculo;
 
     public Posiciones() {

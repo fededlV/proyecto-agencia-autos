@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Pruebas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false)
     private LocalDateTime fecha_hora_inicio;
@@ -26,15 +26,15 @@ public class Pruebas {
     private String comentarios;
 
     @ManyToOne
-    @Column(name = "id_vehiculo")
+    @JoinColumn(name = "id_vehiculo")
     private Vehiculos vehiculo;
 
     @ManyToOne
-    @Column(name = "id_interesado")
+    @JoinColumn(name = "id_interesado")
     private Interesados interesado;
 
     @ManyToOne
-    @Column(name = "id_empleado")
+    @JoinColumn(name = "id_empleado")
     private Empleados empleado;
 
     public Pruebas() {

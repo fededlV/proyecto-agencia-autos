@@ -15,7 +15,7 @@ import java.util.List;
 public class Vehiculos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(length = 50, nullable = false)
     private String patetente;

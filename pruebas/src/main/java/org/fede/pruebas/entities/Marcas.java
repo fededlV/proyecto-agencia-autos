@@ -14,7 +14,7 @@ import java.util.List;
 public class Marcas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String nombre;
     @OneToMany(mappedBy = "marca")
     private List<Modelos> modelos;

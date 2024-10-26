@@ -18,7 +18,7 @@ public class Interesados {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Integer Id;
 
     @Column(name = "tipo_documento", length = 3, nullable = false)
     private String tipoDoc;

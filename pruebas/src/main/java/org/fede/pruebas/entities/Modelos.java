@@ -12,7 +12,7 @@ import lombok.ToString;
 public class Modelos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     @ManyToOne
     @JoinColumn(name = "id_marca")
     private Marcas marca;
