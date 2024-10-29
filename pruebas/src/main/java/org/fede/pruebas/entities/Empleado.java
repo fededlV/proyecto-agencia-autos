@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @ToString
 @Table(name = "Empleados")
-public class Empleados {
+public class Empleado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer legajo;
@@ -27,12 +27,12 @@ public class Empleados {
     private Integer telefono;
 
     @OneToMany(mappedBy = "empleado")
-    private List<Pruebas> pruebas;
+    private List<Prueba> pruebas;
 
-    public Empleados() {
+    public Empleado() {
     }
 
-    public Empleados(String nombre, String apellido, Integer telefono, List<Pruebas> pruebas) {
+    public Empleado(String nombre, String apellido, Integer telefono, List<Prueba> pruebas) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.telefono = telefono;

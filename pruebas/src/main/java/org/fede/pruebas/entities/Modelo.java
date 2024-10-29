@@ -5,24 +5,23 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
 @ToString
-public class Marcas {
+public class Modelo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String nombre;
-    @OneToMany(mappedBy = "marca")
-    private List<Modelos> modelos;
+    @ManyToOne
+    @JoinColumn(name = "id_marca")
+    private Marca marca;
+    private String descripcion;
 
-    public Marcas() {
+    public Modelo() {
     }
 
-    public Marcas(String nombre) {
-        this.nombre = nombre;
+    public Modelo(String descripcion) {
+        this.descripcion = descripcion;
     }
 }

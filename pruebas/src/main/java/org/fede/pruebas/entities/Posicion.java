@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class Posiciones {
+public class Posicion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +28,12 @@ public class Posiciones {
 
     @ManyToOne
     @JoinColumn(name = "id_vehiculo")
-    private Vehiculos vehiculo;
+    private Vehiculo vehiculo;
 
-    public Posiciones() {
+    public Posicion() {
     }
 
-    public Posiciones(LocalDateTime fechaHora, Double latitud, Double longitud, Vehiculos vehiculo) {
+    public Posicion(LocalDateTime fechaHora, Double latitud, Double longitud, Vehiculo vehiculo) {
         this.fechaHora = fechaHora;
         this.latitud = latitud;
         this.longitud = longitud;

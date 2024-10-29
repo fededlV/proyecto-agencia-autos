@@ -1,7 +1,6 @@
 package org.fede.pruebas.entities;
 
 import jakarta.persistence.*;
-import jdk.dynalink.linker.LinkerServices;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,32 +11,28 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class Vehiculos {
+public class Vehiculo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(length = 50, nullable = false)
-    private String patetente;
-
-    @Column(nullable = false)
-    private Integer anio;
+    private String patente;
 
     @ManyToOne
     @JoinColumn(name = "id_modelo")
-    private Modelos modelo;
+    private Modelo modelo;
 
     @OneToMany(mappedBy = "vehiculo")
-    private List<Posiciones> posiciones;
+    private List<Posicion> posiciones;
 
     @OneToMany(mappedBy = "vehiculo")
-    private List<Pruebas> pruebas;
+    private List<Prueba> pruebas;
 
-    public Vehiculos() {
+    public Vehiculo() {
     }
 
-    public Vehiculos(String patetente, Integer anio) {
-        this.patetente = patetente;
-        this.anio = anio;
+    public Vehiculo(String patente, Integer anio) {
+        this.patente = patente;
     }
 }

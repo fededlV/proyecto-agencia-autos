@@ -11,39 +11,39 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class Pruebas {
+public class Prueba {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
-    private LocalDateTime fecha_hora_inicio;
+    @Column(nullable = false, name = "fecha_hora_inicio")
+    private LocalDateTime fechaHoraInicio;
 
-    @Column(nullable = false)
-    private LocalDateTime fecha_hora_fin;
+    @Column(nullable = false, name = "fecha_hora_fin")
+    private LocalDateTime fechaHoraFin;
 
     @Column(length = 500)
     private String comentarios;
 
     @ManyToOne
     @JoinColumn(name = "id_vehiculo")
-    private Vehiculos vehiculo;
+    private Vehiculo vehiculo;
 
     @ManyToOne
     @JoinColumn(name = "id_interesado")
-    private Interesados interesado;
+    private Interesado interesado;
 
     @ManyToOne
     @JoinColumn(name = "id_empleado")
-    private Empleados empleado;
+    private Empleado empleado;
 
-    public Pruebas() {
+    public Prueba() {
     }
 
-    public Pruebas(LocalDateTime fecha_hora_inicio, String comentarios, LocalDateTime fecha_hora_fin, Vehiculos vehiculo, Interesados interesado, Empleados empleado) {
-        this.fecha_hora_inicio = fecha_hora_inicio;
+    public Prueba(LocalDateTime fechHoraInicio, String comentarios, LocalDateTime fechHoraFin, Vehiculo vehiculo, Interesado interesado, Empleado empleado) {
+        this.fechaHoraInicio = fechHoraInicio;
         this.comentarios = comentarios;
-        this.fecha_hora_fin = fecha_hora_fin;
+        this.fechaHoraFin = fechHoraFin;
         this.vehiculo = vehiculo;
         this.interesado = interesado;
         this.empleado = empleado;

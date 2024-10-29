@@ -1,8 +1,13 @@
 package org.fede.pruebas.controllers;
 
-import org.fede.pruebas.entities.Pruebas;
+import jakarta.validation.Valid;
+import org.fede.pruebas.dto.PruebaDto;
+import org.fede.pruebas.dto.PruebaResponseDto;
+import org.fede.pruebas.entities.Prueba;
 import org.fede.pruebas.services.PruebasServices;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -17,7 +22,14 @@ public class PruebaController {
     }
 
     @GetMapping("/pruebas")
-    public List<Pruebas> findAll() {
+    public List<Prueba> findAll() {
         return this.services.findAll();
+    }
+
+    @PostMapping("/pruebaCreacion")
+    public PruebaResponseDto createPrueba(
+            @Valid @RequestBody PruebaDto pruebaDto
+            ) {
+        return this.services.create(pruebaDto);
     }
 }

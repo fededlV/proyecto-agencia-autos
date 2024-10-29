@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.type.descriptor.java.DateJavaType;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class Interesados {
+public class Interesado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +33,7 @@ public class Interesados {
     @Column(nullable = false)
     private Boolean restringido;
 
-    @Column(name = "nro_licencia", nullable = false)
+    @Column(name = "nro_licencia", nullable = false, unique = true)
     private Integer nroLicencia;
 
 
@@ -43,12 +41,12 @@ public class Interesados {
     private LocalDateTime fechaVenLicencia;
 
     @OneToMany(mappedBy = "interesado")
-    private List<Pruebas> pruebas;
+    private List<Prueba> pruebas;
 
-    public Interesados() {
+    public Interesado() {
     }
 
-    public Interesados(String tipoDoc, String documento, String nombre, String apellido, Boolean restringido, Integer nroLicencia, LocalDateTime fechaVenLicencia, List<Pruebas> pruebas) {
+    public Interesado(String tipoDoc, String documento, String nombre, String apellido, Boolean restringido, Integer nroLicencia, LocalDateTime fechaVenLicencia, List<Prueba> pruebas) {
         this.tipoDoc = tipoDoc;
         this.documento = documento;
         this.nombre = nombre;
