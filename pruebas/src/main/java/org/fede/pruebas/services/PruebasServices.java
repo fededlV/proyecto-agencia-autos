@@ -11,10 +11,14 @@ import java.util.stream.Collectors;
 public class PruebasServices {
 
     private final PruebaRepository repository;
+    private final PruebasMapper mapper;
 
-    public PruebasServices(PruebaRepository repository) {
+    public PruebasServices(PruebaRepository repository, PruebasMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
+
+
 
     public List<Pruebas> findAll() {
         return repository.findAll();
