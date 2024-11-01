@@ -1,5 +1,6 @@
 package org.fede.pruebas.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,14 +27,17 @@ public class Prueba {
     private String comentarios;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "id_vehiculo")
     private Vehiculo vehiculo;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "id_interesado")
     private Interesado interesado;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "id_empleado")
     private Empleado empleado;
 

@@ -1,5 +1,6 @@
 package org.fede.pruebas.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class Vehiculo {
     private String patente;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "id_modelo")
     private Modelo modelo;
 

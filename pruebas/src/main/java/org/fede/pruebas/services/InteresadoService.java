@@ -7,6 +7,8 @@ import org.fede.pruebas.repositories.InteresadoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InteresadoService {
@@ -40,5 +42,12 @@ public class InteresadoService {
         }
 
         return interesado;
+    }
+
+    public List<InteresadoDto> findAll() {
+        return interesadoRepository.findAll()
+                .stream()
+                .map(interesadoMapper::toInteresadoDto)
+                .collect(Collectors.toList());
     }
 }

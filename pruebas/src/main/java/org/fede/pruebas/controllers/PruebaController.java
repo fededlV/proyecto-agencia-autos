@@ -22,7 +22,7 @@ public class PruebaController {
     }
 
     @GetMapping("/pruebas")
-    public List<Prueba> findAll() {
+    public List<PruebaResponseDto> findAll() {
         return this.services.findAll();
     }
 

@@ -7,6 +7,7 @@ import org.fede.pruebas.repositories.PruebaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PruebasServices {
@@ -39,7 +40,10 @@ public class PruebasServices {
         return mapper.toPruebaResponseDto(savedPrueba);
     }
 
-    public List<Prueba> findAll() {
-        return repository.findAll();
+    public List<PruebaResponseDto> findAll() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toPruebaResponseDto)
+                .collect(Collectors.toList());
     }
 }

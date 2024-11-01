@@ -5,6 +5,9 @@ import org.fede.pruebas.entities.Empleado;
 import org.fede.pruebas.repositories.EmpleadoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class EmpleadoService {
 
@@ -19,5 +22,12 @@ public class EmpleadoService {
     public void createEmpleado(EmpleadoDto empleadoDto) {
         Empleado empleado = empleadoMapper.toEmpleado(empleadoDto);
         empleadoRepository.save(empleado);
+    }
+
+    public List<EmpleadoDto> findAll() {
+        return empleadoRepository.findAll()
+                .stream()
+                .map(empleadoMapper::toEmpleadoDto)
+                .collect(Collectors.toList());
     }
 }

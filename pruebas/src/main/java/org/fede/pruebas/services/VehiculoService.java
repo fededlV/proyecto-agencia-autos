@@ -1,8 +1,12 @@
 package org.fede.pruebas.services;
 
 import org.fede.pruebas.dto.VehiculoDto;
+import org.fede.pruebas.dto.VehiculoResponseDto;
 import org.fede.pruebas.repositories.VehiculoRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -19,5 +23,12 @@ public class VehiculoService {
     public void createVehiculo(VehiculoDto vehiculoDto) {
         var vehiculo = vehiculoMapper.toVehiculo(vehiculoDto);
         vehiculoRepository.save(vehiculo);
+    }
+
+    public List<VehiculoResponseDto> findAll() {
+        return vehiculoRepository.findAll()
+                .stream()
+                .map(vehiculoMapper::toVehiculoResponseDto)
+                .collect(Collectors.toList());
     }
 }

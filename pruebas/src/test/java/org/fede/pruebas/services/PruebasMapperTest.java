@@ -42,14 +42,11 @@ class PruebasMapperTest {
 
     @Test
     public void testToPruebaResponseDtoWithNullPrueba() {
-        //Arrange
-        Prueba prueba = null;
-
-        // Act
-        PruebaResponseDto responseDto = pruebasMapper.toPruebaResponseDto(prueba);
+        //Arrange and act
+        var msg = assertThrows(NullPointerException.class, () -> pruebasMapper.toPruebaResponseDto(null));
 
         // Asserrt
-        assertThrows(NullPointerException.class, () -> pruebasMapper.toPruebaResponseDto(prueba));
+        assertEquals("La prueba no deberia ser nula", msg.getMessage());
     }
 
     @Test

@@ -1,5 +1,6 @@
 package org.fede.pruebas.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ public class Modelo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "id_marca")
     private Marca marca;
     private String descripcion;

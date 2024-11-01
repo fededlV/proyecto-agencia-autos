@@ -1,5 +1,6 @@
 package org.fede.pruebas.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class Posicion {
     private Double longitud;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "id_vehiculo")
     private Vehiculo vehiculo;
 
