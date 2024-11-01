@@ -1,5 +1,6 @@
 package org.fede.pruebas.controllers;
 
+import jakarta.validation.Valid;
 import org.fede.pruebas.dto.InteresadoDto;
 import org.fede.pruebas.services.InteresadoService;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class InteresadoController {
 
     @PostMapping("/interesados")
     public ResponseEntity<Void> createInteresado(
-            @RequestBody InteresadoDto interesadoDto
+            @Valid @RequestBody InteresadoDto interesadoDto
             ) {
         interesadoService.createInteresado(interesadoDto); //Logica de la creacion que esta en el service
         return ResponseEntity.status(HttpStatus.CREATED).build(); //Devuelve un 201 created

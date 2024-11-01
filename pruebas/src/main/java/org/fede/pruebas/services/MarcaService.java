@@ -1,7 +1,9 @@
 package org.fede.pruebas.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.fede.pruebas.dto.InteresadoDto;
 import org.fede.pruebas.dto.MarcaDto;
+import org.fede.pruebas.entities.Marca;
 import org.fede.pruebas.repositories.MarcaRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +21,27 @@ public class MarcaService {
         this.mapper = mapper;
     }
 
+    public void createMarca(MarcaDto dto) {
+        Marca marca = mapper.toMarca(dto);
+        repository.save(marca);
+    }
+
     public List<MarcaDto> findAll() {
         return repository.findAll()
                 .stream()
                 .map(mapper::toMarcaDto)
                 .collect(Collectors.toList());
+    }
+
+    public void deleteMarca(Integer id) {
+        repository.deleteById(id);
+    }
+
+    public MarcaDto updateMarca(Integer id, MarcaDto dto) {
+        Marca marca = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Marca no econtrada con ese id: " + id));
+
+        marca.setNombre(dto.nombre());
+        return mapper.toMarcaDto(repository.save(marca));
     }
 }

@@ -22,12 +22,29 @@ public class InteresadoService {
     }
 
     public void createInteresado(InteresadoDto interesadoDto) {
-        var interesado = interesadoMapper.toInteresado(interesadoDto);
+        Interesado interesado = interesadoMapper.toInteresado(interesadoDto);
         interesadoRepository.save(interesado);
     }
 
+    public List<InteresadoDto> findAll() {
+        return interesadoRepository.findAll()
+                .stream()
+                .map(interesadoMapper::toInteresadoDto)
+                .collect(Collectors.toList());
+    }
 
-    public Interesado validarInteresado(Integer idInteresado) {
+    public InteresadoDto updateInteresado(Integer id, InteresadoDto dto) {
+        Interesado interesado = interesadoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("El interesado no se encontro con ese id: " + id));
+
+        return interesadoMapper.toInteresadoDto(interesadoRepository.save(interesado));
+    }
+
+    public void deleteInteresado(Integer idInteresado) {
+        interesadoRepository.deleteById(idInteresado);
+    }
+
+    public InteresadoDto validarInteresado(Integer idInteresado) {
         Interesado interesado = interesadoRepository.findById(idInteresado)
                 .orElseThrow(() -> new EntityNotFoundException("Interesado no encontrado"));
 
@@ -41,13 +58,7 @@ public class InteresadoService {
             throw new IllegalStateException("El interesado esta restringido para probar vehiculos");
         }
 
-        return interesado;
-    }
-
-    public List<InteresadoDto> findAll() {
-        return interesadoRepository.findAll()
-                .stream()
-                .map(interesadoMapper::toInteresadoDto)
-                .collect(Collectors.toList());
+        InteresadoDto dto = interesadoMapper.toInteresadoDto(interesado);
+        return dto;
     }
 }

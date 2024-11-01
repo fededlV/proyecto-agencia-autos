@@ -1,5 +1,6 @@
 package org.fede.pruebas.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.fede.pruebas.dto.EmpleadoDto;
 import org.fede.pruebas.entities.Empleado;
 import org.fede.pruebas.repositories.EmpleadoRepository;
@@ -19,9 +20,10 @@ public class EmpleadoService {
         this.empleadoRepository = empleadoRepository;
     }
 
-    public void createEmpleado(EmpleadoDto empleadoDto) {
+    public EmpleadoDto createEmpleado(EmpleadoDto empleadoDto) {
         Empleado empleado = empleadoMapper.toEmpleado(empleadoDto);
-        empleadoRepository.save(empleado);
+        Empleado createEmpleado = empleadoRepository.save(empleado);
+        return empleadoMapper.toEmpleadoDto(createEmpleado);
     }
 
     public List<EmpleadoDto> findAll() {
@@ -29,5 +31,34 @@ public class EmpleadoService {
                 .stream()
                 .map(empleadoMapper::toEmpleadoDto)
                 .collect(Collectors.toList());
+    }
+
+    public EmpleadoDto findById(Integer legajo) {
+        return empleadoRepository.findById(legajo)
+                .map(empleadoMapper::toEmpleadoDto)
+                .orElse(null);
+    }
+
+    public EmpleadoDto findByName(String name) {
+        return empleadoRepository.findByNombre(name)
+                .map(empleadoMapper::toEmpleadoDto)
+                .orElse(null);
+    }
+
+    public void deleteById(Integer legajo) {
+        empleadoRepository.deleteById(legajo);
+    }
+
+    public EmpleadoDto updateEmpleado(Integer legajo, EmpleadoDto empleadoDto) {
+        Empleado empleado = empleadoRepository.findById(legajo)
+                .orElseThrow(() -> new EntityNotFoundException("El empleado no fue encontrado con legajo: " + legajo));
+
+        empleado.setTelefono(empleadoDto.telefono_contacto());
+        empleado.setNombre(empleadoDto.nombre());
+        empleado.setApellido(empleadoDto.apellido());
+
+        Empleado empleadoUpdate = empleadoRepository.save(empleado);
+
+        return empleadoMapper.toEmpleadoDto(empleadoUpdate);
     }
 }

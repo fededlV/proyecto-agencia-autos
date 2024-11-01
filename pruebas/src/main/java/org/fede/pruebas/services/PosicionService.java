@@ -1,5 +1,6 @@
 package org.fede.pruebas.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.fede.pruebas.dto.PosicionDto;
 import org.fede.pruebas.dto.PosicionResponseDto;
 import org.fede.pruebas.entities.Posicion;
@@ -30,5 +31,20 @@ public class PosicionService {
                 .stream()
                 .map(posicionMapper::toPosicionResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    public PosicionResponseDto updatePosicion(Integer id, PosicionDto dto) {
+        Posicion posicion = posicionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("La posicion no existe"));
+
+        posicion.setLatitud(dto.latitud());
+        posicion.setLongitud(dto.longitud());
+        posicion.setFechaHora(dto.fechaHora());
+
+        return posicionMapper.toPosicionResponseDto(posicionRepository.save(posicion));
+    }
+
+    public void deletePosicion(Integer id) {
+        posicionRepository.deleteById(id);
     }
 }
