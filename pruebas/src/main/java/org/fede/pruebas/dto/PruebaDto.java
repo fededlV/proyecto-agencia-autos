@@ -13,7 +13,6 @@ public record PruebaDto(
         Integer idEmpleado,
         @NotEmpty(message = "La fecha y hora inicio de la prueba no debe estar vacio")
         LocalDateTime fechaHoraInicio,
-        @NotEmpty(message = "La fecha y hora fin de la prueba no debe estar vacio")
         LocalDateTime fechaHoraFin,
         String comentario
 ) {

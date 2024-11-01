@@ -53,9 +53,11 @@ class PruebasServicesTest {
         prueba.setFechaHoraFin(dto.fechaHoraFin());
 
         // 3. Crear el DTO de respuesta, que representa cómo se devolverán los datos tras guardar
-        PruebaResponseDto responseDto = new PruebaResponseDto();
-        responseDto.setFechaHoraInicio(prueba.getFechaHoraInicio());
-        responseDto.setFechaHoraFin(prueba.getFechaHoraFin());
+        PruebaResponseDto responseDto = new PruebaResponseDto(
+                LocalDateTime.now(),
+                LocalDateTime.now().plusHours(1),
+                "Prueba de manejo"
+        );
 
         // 4. Configurar el mock del mapper para que convierta el DTO en la entidad
         when(mapper.toPrueba(dto)).thenReturn(prueba);
@@ -84,8 +86,15 @@ class PruebasServicesTest {
     @Test
     void testCreatePrueba_VehiculoEnPrueba_ExceptionThrown() {
         // 1. Crear un DTO de prueba
-        PruebaDto dto = new PruebaDto();
         Prueba prueba = new Prueba();
+        PruebaDto dto = new PruebaDto(
+                1,
+                1,
+                1,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusHours(1),
+                "Prueba de manejo"
+        );
 
         // 2. Configurar el mock del mapper para convertir el DTO en la entidad Prueba
         when(mapper.toPrueba(dto)).thenReturn(prueba);
@@ -111,12 +120,18 @@ class PruebasServicesTest {
         // 1. Crear instancias de Prueba y sus correspondientes DTOs de respuesta
         Prueba prueba1 = new Prueba();
         Prueba prueba2 = new Prueba();
-        PruebaResponseDto dto1 = new PruebaResponseDto();
-        PruebaResponseDto dto2 = new PruebaResponseDto();
+        PruebaResponseDto dto1 = new PruebaResponseDto(
+                LocalDateTime.now(),
+                null,
+                null
+        );
+        PruebaResponseDto dto2 = new PruebaResponseDto(
+                LocalDateTime.now(),
+                null,
+                null
+        );
         prueba1.setFechaHoraInicio(LocalDateTime.now());
         prueba2.setFechaHoraInicio(LocalDateTime.now().plusDays(1));
-        dto1.setFechaHoraInicio(prueba1.getFechaHoraInicio());
-        dto2.setFechaHoraInicio(prueba2.getFechaHoraInicio());
 
         // 2. Configurar el mock del repositorio para que devuelva una lista de entidades Prueba
         when(repository.findAll()).thenReturn(Arrays.asList(prueba1, prueba2));
