@@ -25,9 +25,10 @@ public class ModeloService {
         this.marcaRepository = marcaRepository;
     }
 
-    public void createModelo(ModeloDto dto) {
+    public ModeloResponseDto createModelo(ModeloDto dto) {
         Modelo modelo = mapper.toModelo(dto);
         repository.save(modelo);
+        return mapper.toModeloResponseDto(modelo);
     }
 
     public List<ModeloResponseDto> findAll() {

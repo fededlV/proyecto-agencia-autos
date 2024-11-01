@@ -7,6 +7,7 @@ import org.fede.pruebas.entities.Modelo;
 import org.fede.pruebas.entities.Vehiculo;
 import org.fede.pruebas.repositories.ModeloRepository;
 import org.fede.pruebas.repositories.VehiculoRepository;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,16 +20,19 @@ public class VehiculoService {
     private final VehiculoRepository vehiculoRepository;
     private final VehiculoMapper vehiculoMapper;
     private final ModeloRepository modeloRepository;
+    private final MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter;
 
-    public VehiculoService(VehiculoRepository vehiculoRepository, VehiculoMapper vehiculoMapper, ModeloRepository modeloRepository) {
+    public VehiculoService(VehiculoRepository vehiculoRepository, VehiculoMapper vehiculoMapper, ModeloRepository modeloRepository, MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter) {
         this.vehiculoRepository = vehiculoRepository;
         this.vehiculoMapper = vehiculoMapper;
         this.modeloRepository = modeloRepository;
+        this.mappingJackson2HttpMessageConverter = mappingJackson2HttpMessageConverter;
     }
 
-    public void createVehiculo(VehiculoDto vehiculoDto) {
-        var vehiculo = vehiculoMapper.toVehiculo(vehiculoDto);
-        vehiculoRepository.save(vehiculo);
+    public VehiculoResponseDto createVehiculo(VehiculoDto vehiculoDto) {
+        Vehiculo vehiculo = vehiculoMapper.toVehiculo(vehiculoDto);
+        Vehiculo vehiculoSaved = vehiculoRepository.save(vehiculo);
+        return vehiculoMapper.toVehiculoResponseDto(vehiculoSaved);
     }
 
     public List<VehiculoResponseDto> findAll() {

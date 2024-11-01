@@ -21,9 +21,10 @@ public class InteresadoService {
         this.interesadoMapper = interesadoMapper;
     }
 
-    public void createInteresado(InteresadoDto interesadoDto) {
+    public InteresadoDto createInteresado(InteresadoDto interesadoDto) {
         Interesado interesado = interesadoMapper.toInteresado(interesadoDto);
-        interesadoRepository.save(interesado);
+        Interesado interesadoSaved = interesadoRepository.save(interesado);
+        return interesadoMapper.toInteresadoDto(interesadoSaved);
     }
 
     public List<InteresadoDto> findAll() {

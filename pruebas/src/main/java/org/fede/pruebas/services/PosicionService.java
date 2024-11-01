@@ -21,9 +21,10 @@ public class PosicionService {
         this.posicionMapper = posicionMapper;
     }
 
-    public void createPosicion(PosicionDto dto){
+    public PosicionResponseDto createPosicion(PosicionDto dto){
         Posicion posicion = posicionMapper.toPosicion(dto);
-        posicionRepository.save(posicion);
+        Posicion posicionSaved = posicionRepository.save(posicion);
+        return posicionMapper.toPosicionResponseDto(posicionSaved);
     }
 
     public List<PosicionResponseDto> findAll() {

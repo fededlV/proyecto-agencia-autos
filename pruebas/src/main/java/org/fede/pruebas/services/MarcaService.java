@@ -21,9 +21,10 @@ public class MarcaService {
         this.mapper = mapper;
     }
 
-    public void createMarca(MarcaDto dto) {
+    public MarcaDto createMarca(MarcaDto dto) {
         Marca marca = mapper.toMarca(dto);
-        repository.save(marca);
+        Marca marcaSaved = repository.save(marca);
+        return mapper.toMarcaDto(marcaSaved);
     }
 
     public List<MarcaDto> findAll() {
