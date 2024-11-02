@@ -45,7 +45,7 @@ public class InteresadoService {
         interesadoRepository.deleteById(idInteresado);
     }
 
-    public InteresadoDto validarInteresado(Integer idInteresado) {
+    public void validarInteresado(Integer idInteresado) {
         Interesado interesado = interesadoRepository.findById(idInteresado)
                 .orElseThrow(() -> new EntityNotFoundException("Interesado no encontrado"));
 
@@ -58,8 +58,5 @@ public class InteresadoService {
         if(interesado.getRestringido()) {
             throw new IllegalStateException("El interesado esta restringido para probar vehiculos");
         }
-
-        InteresadoDto dto = interesadoMapper.toInteresadoDto(interesado);
-        return dto;
     }
 }

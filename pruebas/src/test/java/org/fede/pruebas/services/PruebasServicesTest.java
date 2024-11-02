@@ -3,7 +3,6 @@ package org.fede.pruebas.services;
 import org.fede.pruebas.dto.PruebaDto;
 import org.fede.pruebas.dto.PruebaResponseDto;
 import org.fede.pruebas.entities.Prueba;
-import org.fede.pruebas.entities.Vehiculo;
 import org.fede.pruebas.repositories.PruebaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -151,4 +150,44 @@ class PruebasServicesTest {
         // 6. Verificar que el repositorio fue invocado una vez para obtener todas las pruebas
         verify(repository, times(1)).findAll();
     }
+
+    @Test
+    void testListarPruebasEnCurso_ReturnsPruebasEnCurso() {
+    // 1. Crear una fecha y hora para la prueba
+    LocalDateTime fechaHora = LocalDateTime.now();
+
+    // 2. Crear instancias de Prueba y sus correspondientes DTOs de respuesta
+    Prueba prueba1 = new Prueba();
+    Prueba prueba2 = new Prueba();
+    PruebaResponseDto dto1 = new PruebaResponseDto(
+            LocalDateTime.now(),
+            null,
+            null
+    );
+    PruebaResponseDto dto2 = new PruebaResponseDto(
+            LocalDateTime.now(),
+            null,
+            null
+    );
+    prueba1.setFechaHoraInicio(LocalDateTime.now());
+    prueba2.setFechaHoraInicio(LocalDateTime.now().plusDays(1));
+
+    // 3. Configurar el mock del repositorio para que devuelva una lista de entidades Prueba en curso
+    when(repository.findByPruebasEnCurso(fechaHora)).thenReturn(Arrays.asList(prueba1, prueba2));
+
+    // 4. Configurar el mock del mapper para convertir cada entidad Prueba en su respectivo DTO de respuesta
+    when(mapper.toPruebaResponseDto(prueba1)).thenReturn(dto1);
+    when(mapper.toPruebaResponseDto(prueba2)).thenReturn(dto2);
+
+    // 5. Ejecutar el método listarPruebasEnCurso y capturar el resultado
+    List<PruebaResponseDto> result = pruebasServices.listarPruebasEnCurso(fechaHora);
+
+    // 6. Verificar que el resultado contiene el número esperado de elementos y que coinciden con los DTOs esperados
+    assertEquals(2, result.size());
+    assertEquals(dto1, result.get(0));
+    assertEquals(dto2, result.get(1));
+
+    // 7. Verificar que el repositorio fue invocado una vez para obtener las pruebas en curso
+    verify(repository, times(1)).findByPruebasEnCurso(fechaHora);
+}
 }

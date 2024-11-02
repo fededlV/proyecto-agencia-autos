@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/posiciones")
+@RequestMapping("/api/posiciones")
 public class PosicionController {
 
     private final PosicionService posicionService;
@@ -29,10 +29,9 @@ public class PosicionController {
         return posicionService.findAll();
     }
 
-    @PostMapping("/crer")
+    @PostMapping("/crear")
     public ResponseEntity<PosicionResponseDto> crearPosicion(
-            @Valid @RequestBody PosicionDto posicionDto,
-            ServletResponse servletResponse) {
+            @Valid @RequestBody PosicionDto posicionDto) {
         PosicionResponseDto posicionSaved = posicionService.createPosicion(posicionDto);
         return new ResponseEntity<>(posicionSaved, HttpStatus.CREATED);
     }

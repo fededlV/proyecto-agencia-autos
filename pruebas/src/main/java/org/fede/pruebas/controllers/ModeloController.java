@@ -20,7 +20,7 @@ public class ModeloController {
         this.service = service;
     }
 
-    @PostMapping("/crear")
+    @PostMapping("/api/crear")
     public ResponseEntity<ModeloResponseDto> crearModelo(
             @Valid @RequestBody ModeloDto modeloDto
             ) {

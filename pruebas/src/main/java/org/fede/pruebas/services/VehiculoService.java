@@ -20,13 +20,11 @@ public class VehiculoService {
     private final VehiculoRepository vehiculoRepository;
     private final VehiculoMapper vehiculoMapper;
     private final ModeloRepository modeloRepository;
-    private final MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter;
 
     public VehiculoService(VehiculoRepository vehiculoRepository, VehiculoMapper vehiculoMapper, ModeloRepository modeloRepository, MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter) {
         this.vehiculoRepository = vehiculoRepository;
         this.vehiculoMapper = vehiculoMapper;
         this.modeloRepository = modeloRepository;
-        this.mappingJackson2HttpMessageConverter = mappingJackson2HttpMessageConverter;
     }
 
     public VehiculoResponseDto createVehiculo(VehiculoDto vehiculoDto) {
