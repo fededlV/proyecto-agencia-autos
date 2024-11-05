@@ -1,0 +1,15 @@
+# Usa una imagen ligera de Java 21
+FROM openjdk:21-jdk-slim
+
+# Establece el directorio de trabajo
+WORKDIR /api-gateway
+
+# Copia el archivo JAR generado por Spring Boot al contenedor
+COPY target/api-gateway-0.0.1-SNAPSHOT.jar api-gateway.jar
+
+# Expone el puerto en el que el API esta eschuchando
+EXPOSE 8080
+
+# Configura el comando para ejecutar la aplicacion
+ENTRYPOINT ["java", "-jar", "api-gateway.jar"]
+

@@ -1,0 +1,14 @@
+server:
+    port: 8080
+
+spirng:
+    cloud:
+        gateway: 
+            routes:
+                -id: pruebas-service
+                uri: http://localhost:8081 #URL del servicio de pruebas
+                predicates:
+                    -Path=/api/pruebas/** #Las solicitudes que coincidan con la ruta seran redirigidas
+                filters:
+                    -StripPrefix=2 # Elimina el prefijo "/api/purebas" antes de enviar la solicitud
+
