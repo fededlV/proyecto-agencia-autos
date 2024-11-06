@@ -9,6 +9,10 @@ spirng:
                 uri: http://localhost:8081 #URL del servicio de pruebas
                 predicates:
                     -Path=/api/pruebas/** #Las solicitudes que coincidan con la ruta seran redirigidas
+                    -Path=/api/empleados/**
                 filters:
                     -StripPrefix=2 # Elimina el prefijo "/api/purebas" antes de enviar la solicitud
 
+jwt:
+    expiration: 3600000
+    secret-key: "rocco"

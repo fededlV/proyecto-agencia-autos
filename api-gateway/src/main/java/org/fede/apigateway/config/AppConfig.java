@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 
 @Configuration
 public class AppConfig {
-
+    //Define al AuthenticationManager como un bean para gestionar la autenticacion
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();

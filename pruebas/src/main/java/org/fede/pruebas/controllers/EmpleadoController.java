@@ -28,7 +28,7 @@ public class EmpleadoController {
         return new ResponseEntity<>(empleadoDto, HttpStatus.CREATED);
     }
 
-    @GetMapping("/getEmpleados")
+    @GetMapping("/obtener")
     public List<EmpleadoDto> getAll() {
         return empleadoService.findAll();
     }
