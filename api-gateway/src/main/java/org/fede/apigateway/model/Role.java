@@ -1,7 +1,7 @@
 package org.fede.apigateway.model;
 
 public enum Role {
-    EMPLEADO,
-    USUARIO_ASOCIADO,
-    ADMINISTRADOR
+    ROLE_EMPLEADO,
+    ROLE_USUARIO_ASOCIADO,
+    ROLE_ADMIN
 }

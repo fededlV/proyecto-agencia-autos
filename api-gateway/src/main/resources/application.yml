@@ -10,8 +10,14 @@ spirng:
                   predicates:
                       - Path=/api/pruebas/**
                       - Path=/api/empleados/**
+                - id: reportes-service
+                  uri: http://localhost:8082
+                  predicates:
+                      - Path=/api/reportes/**
 
 
 jwt:
     expiration: 3600000
     secret-key: "rocco"
+
+

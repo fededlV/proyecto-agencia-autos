@@ -21,9 +21,14 @@ public class JwtUtil {
     private final int jwtExpirationMs = 3600000; //Expiracion del token en milisegundos
 
     public String generateToken(String username, Collection<? extends GrantedAuthority> authorities) {
+
+        String roles = authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
         return Jwts.builder()
                 .setSubject(username)
-                .claim("roles", authorities)
+                .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
