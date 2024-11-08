@@ -42,12 +42,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
     }
 
-
-    protected void succesfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
         //Generar el JWT si la autenticacion es exitosa
         String token = jwtUtil.generateToken(authResult.getName(), authResult.getAuthorities());
 
         //Añadir el token a la cabecera de la respuesta
-        response.addHeader("Authorization", "Bearer" + token);
+        response.addHeader("Authorization", "Bearer " + token);
     }
 }

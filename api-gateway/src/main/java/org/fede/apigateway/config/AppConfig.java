@@ -10,6 +10,7 @@ public class AppConfig {
     //Define al AuthenticationManager como un bean para gestionar la autenticacion
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        System.out.println("Creando bean");
         return authenticationConfiguration.getAuthenticationManager();
     }
 }

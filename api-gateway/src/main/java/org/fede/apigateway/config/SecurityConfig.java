@@ -23,19 +23,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+        /*AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);*/
         http
                 .csrf((csrf -> csrf.disable())) //Deshabilita CSRF ya que fue eliminado a partir de Spring security 6
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/obtener").permitAll() //Permitir acceso sin autenticacion  para ver empleados
+                        .requestMatchers("/obtener").permitAll() //Permitir acceso sin autenticacion  para ver empleados (si no anda probar poner "/api/empleados/obtener"
                         .requestMatchers("/crear", "/enviarNotificacion").hasRole("EMPLEADO")
                         .requestMatchers("/enviarPosicion").hasRole("USUARIO_ASOCIADO")
                         .requestMatchers("/verReportes").hasRole("ADMINISTRADOR")
                         .anyRequest().authenticated()
                 )
-                //.addFilter(new JwtAuthenticationFilter(authenticationManager, jwtUtil))
-                //.addFilter(new JwtAuthorizationFilter(authenticationManager, jwtUtil))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtUtil))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager, jwtUtil))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Aplicacion sin estado
 
         return http.build();
