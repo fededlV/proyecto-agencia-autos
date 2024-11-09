@@ -16,6 +16,8 @@ Considerando el elevado costo de los vehículos que comercializa la agencia, ins
 ## Estructura de la base de datos
 
 Acompaña a este trabajo práctico una base de datos con una estructura de referencia, pero que los alumnos podrán modificar si así lo desean. En esta base de referencia **NO** se incluye la tabla donde se almacenarán las notificaciones, es tarea de los alumnos crear esa tabla para dar soporte a los requerimientos planteados en este trabajo.
+![image](https://github.com/user-attachments/assets/9b2a13f8-ff27-4c90-a8d2-13766131d212)
+
 
 ## Consignas
 
