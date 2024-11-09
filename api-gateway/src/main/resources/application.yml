@@ -1,23 +1,54 @@
 server:
-    port: 8080
+  port: 8080  # Puerto en el que se ejecutará el API Gateway
 
 spring:
-    cloud:
-        gateway: 
-            routes:
-                - id: pruebas-service
-                  uri: http://localhost:8081 #URI del servicio
-                  predicates:
-                      - Path=/api/pruebas/**
-                      - Path=/api/empleados/**
-                - id: reportes-service
-                  uri: http://localhost:8082
-                  predicates:
-                      - Path=/api/reportes/**
+  application:
+    name: api-gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://labsys.frc.utn.edu.ar/aim/realms/backend-tps  # URL del Keycloak Realm
+  cloud:
+    gateway:
+      routes:
+        - id: pruebas-service
+          uri: http://localhost:8081  # URL del servicio pruebas
+          predicates:
+            - Path=/api/pruebas/**
+            - Path=/api/empleados/**
+          metadata:
+            roles: Empleado
+
+        - id: notificaciones-service
+          uri: http://localhost:8082  # URL del servicio notificaciones
+          predicates:
+            - Path=/api/notificaciones/**
+          metadata:
+            roles: Empleado
+
+        - id: posiciones-service
+          uri: http://localhost:8082  # URL del servicio Posiciones (notificacion y posiciones son el mismo servicio)
+          predicates:
+            - Path=/api/posiciones/**
+          metadata:
+            roles: Vehículo
+
+        - id: reportes-service
+          uri: http://localhost:8082 #URL del servicio reportes
+          predicates:
+            - Path=/api/reportes/**
+          metadata:
+            roles: Admin
+
+keycloak:
+  realm: backend-tps
+  auth-server-url: https://labsys.frc.utn.edu.ar/aim/
+  client-id: cliente-tpi
+  client-secret: ZmiMMce6zh4xKHde1FFKbfkiThDyYpyn
+  confidential-port: 0
+  principal-attribute: preferred_username
 
 
-jwt:
-    expiration: 3600000
-    secret-key: "rocco"
 
 

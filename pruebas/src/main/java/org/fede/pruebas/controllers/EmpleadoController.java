@@ -20,6 +20,11 @@ public class EmpleadoController {
         this.empleadoService = empleadoService;
     }
 
+    @GetMapping("/obtener")
+    public List<EmpleadoDto> getAll() {
+        return empleadoService.findAll();
+    }
+
     @PostMapping("/crearEmpleados")
     public ResponseEntity<EmpleadoDto> crearEmpleados(
             @Valid @RequestBody EmpleadoDto empleadoDto
@@ -28,10 +33,6 @@ public class EmpleadoController {
         return new ResponseEntity<>(empleadoDto, HttpStatus.CREATED);
     }
 
-    @GetMapping("/obtener")
-    public List<EmpleadoDto> getAll() {
-        return empleadoService.findAll();
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<EmpleadoDto> actualizarEmpleados(
