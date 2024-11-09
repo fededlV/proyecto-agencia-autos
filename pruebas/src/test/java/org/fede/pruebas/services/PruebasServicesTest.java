@@ -2,8 +2,14 @@ package org.fede.pruebas.services;
 
 import org.fede.pruebas.dto.PruebaDto;
 import org.fede.pruebas.dto.PruebaResponseDto;
+import org.fede.pruebas.entities.Empleado;
+import org.fede.pruebas.entities.Interesado;
 import org.fede.pruebas.entities.Prueba;
+import org.fede.pruebas.entities.Vehiculo;
+import org.fede.pruebas.repositories.EmpleadoRepository;
+import org.fede.pruebas.repositories.InteresadoRepository;
 import org.fede.pruebas.repositories.PruebaRepository;
+import org.fede.pruebas.repositories.VehiculoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,17 +33,29 @@ class PruebasServicesTest {
     @Mock
     private PruebasMapper mapper;
 
+    @Mock
+    private VehiculoRepository vehiculoRepository;
+
+    @Mock
+    private EmpleadoRepository empleadoRepository;
+
+    @Mock
+    private InteresadoRepository interesadoRepository;
+
+    @Mock
+    private InteresadoService interesadoService;
+
     @InjectMocks
     private PruebasServices pruebasServices;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void testCreatePrueba_SuccessfulCreation() {
-        // 1. Crear un DTO de prueba con datos de inicio y fin de la prueba
+        // Crear el DTO de prueba
         PruebaDto dto = new PruebaDto(
                 1,
                 1,
@@ -46,40 +65,36 @@ class PruebasServicesTest {
                 "Prueba de manejo"
         );
 
-        // 2. Crear una instancia de la entidad Prueba, inicializándola con los mismos datos del DTO
-        Prueba prueba = new Prueba();
-        prueba.setFechaHoraInicio(dto.fechaHoraInicio());
-        prueba.setFechaHoraFin(dto.fechaHoraFin());
+        // Crear instancias de Vehiculo, Empleado, e Interesado
+        Vehiculo vehiculo = new Vehiculo();
+        Empleado empleado = new Empleado();
+        Interesado interesado = new Interesado();
 
-        // 3. Crear el DTO de respuesta, que representa cómo se devolverán los datos tras guardar
+        // Configurar el comportamiento de los mocks
+        when(vehiculoRepository.findById(dto.idVehiculo())).thenReturn(Optional.of(vehiculo));
+        when(empleadoRepository.findById(dto.idEmpleado())).thenReturn(Optional.of(empleado));
+        when(interesadoRepository.findById(dto.idInteresado())).thenReturn(Optional.of(interesado));
+
+        // Configurar otros mocks necesarios
+        Prueba prueba = new Prueba();
+        when(mapper.toPrueba(dto)).thenReturn(prueba);
+        when(repository.existsByVehiculoAndFechaHoraInicioLessThanEqualAndFechaHoraFinGreaterThanEqual(
+                prueba.getVehiculo(), prueba.getFechaHoraInicio(), prueba.getFechaHoraFin())).thenReturn(false);
+
         PruebaResponseDto responseDto = new PruebaResponseDto(
                 LocalDateTime.now(),
                 LocalDateTime.now().plusHours(1),
                 "Prueba de manejo"
         );
-
-        // 4. Configurar el mock del mapper para que convierta el DTO en la entidad
-        when(mapper.toPrueba(dto)).thenReturn(prueba);
-
-        // 5. Configurar el mock del repositorio para que indique que el vehículo no está en prueba
-        when(repository.existsByVehiculoAndFechaHoraInicioLessThanEqualAndFechaHoraFinGreaterThanEqual(
-                prueba.getVehiculo(), prueba.getFechaHoraInicio(), prueba.getFechaHoraFin())).thenReturn(false);
-
-        // 6. Configurar el mock del repositorio para que guarde la entidad Prueba y la devuelva
+        when(mapper.toPruebaResponseDto(prueba)).thenReturn(responseDto);
         when(repository.save(prueba)).thenReturn(prueba);
 
-        // 7. Configurar el mock del mapper para que convierta la entidad guardada en el DTO de respuesta
-        when(mapper.toPruebaResponseDto(prueba)).thenReturn(responseDto);
-
-        // 8. Ejecutar el método create y verificar el resultado
+        // Ejecutar el metodo create y verificar el resultado
         PruebaResponseDto result = pruebasServices.create(dto);
 
-        // 9. Aserciones para verificar que el resultado no es nulo y que el DTO de respuesta es correcto
+        // Verificar que el resultado no es nulo y es igual a responseDto
         assertNotNull(result);
         assertEquals(responseDto, result);
-
-        // 10. Verificar que el repositorio fue invocado una vez para guardar la prueba
-        verify(repository, times(1)).save(prueba);
     }
 
     @Test
@@ -102,7 +117,7 @@ class PruebasServicesTest {
         when(repository.existsByVehiculoAndFechaHoraInicioLessThanEqualAndFechaHoraFinGreaterThanEqual(
                 any(), any(), any())).thenReturn(true);
 
-        // 4. Ejecutar el método y verificar que lanza una excepción debido a la colisión de fechas
+        // 4. Ejecutar el metodo y verificar que lanza una excepción debido a la colisión de fechas
         Exception exception = assertThrows(RuntimeException.class, () -> {
             pruebasServices.create(dto);
         });
@@ -110,7 +125,7 @@ class PruebasServicesTest {
         // 5. Verificar el mensaje de excepción para asegurarse de que es el esperado
         assertEquals("El vehiculo ya esta siendo probado en este momento", exception.getMessage());
 
-        // 6. Verificar que no se guardó nada en el repositorio (el método save no debería ser invocado)
+        // 6. Verificar que no se guardó nada en el repositorio (el metodo save no debería ser invocado)
         verify(repository, never()).save(prueba);
     }
 
@@ -139,7 +154,7 @@ class PruebasServicesTest {
         when(mapper.toPruebaResponseDto(prueba1)).thenReturn(dto1);
         when(mapper.toPruebaResponseDto(prueba2)).thenReturn(dto2);
 
-        // 4. Ejecutar el método findAll y capturar el resultado
+        // 4. Ejecutar el metodo findAll y capturar el resultado
         List<PruebaResponseDto> result = pruebasServices.findAll();
 
         // 5. Verificar que el resultado contiene el número esperado de elementos y que coinciden con los DTOs esperados

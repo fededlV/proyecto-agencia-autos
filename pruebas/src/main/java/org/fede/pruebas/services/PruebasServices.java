@@ -12,6 +12,7 @@ import org.fede.pruebas.repositories.EmpleadoRepository;
 import org.fede.pruebas.repositories.InteresadoRepository;
 import org.fede.pruebas.repositories.PruebaRepository;
 import org.fede.pruebas.repositories.VehiculoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,7 +29,13 @@ public class PruebasServices {
     private final InteresadoRepository interesadoRepository;
     private final InteresadoService interesadoService;
 
-    public PruebasServices(PruebaRepository repository, PruebasMapper mapper, VehiculoRepository vehiculoRepository, EmpleadoRepository empleadoRepository, InteresadoRepository interesadoRepository, InteresadoService interesadoService) {
+    public PruebasServices(
+            PruebaRepository repository,
+            PruebasMapper mapper,
+            VehiculoRepository vehiculoRepository,
+            EmpleadoRepository empleadoRepository,
+            InteresadoRepository interesadoRepository,
+            InteresadoService interesadoService) {
         this.repository = repository;
         this.mapper = mapper;
         this.vehiculoRepository = vehiculoRepository;
