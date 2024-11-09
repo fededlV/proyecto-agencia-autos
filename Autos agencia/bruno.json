@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Autos agencia",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
