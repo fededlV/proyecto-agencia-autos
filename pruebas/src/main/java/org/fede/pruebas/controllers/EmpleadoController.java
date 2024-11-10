@@ -20,9 +20,9 @@ public class EmpleadoController {
         this.empleadoService = empleadoService;
     }
 
-    @GetMapping("/obtener")
-    public List<EmpleadoDto> getAll() {
-        return empleadoService.findAll();
+    @GetMapping("/")
+    public ResponseEntity<List<EmpleadoDto>> getAll() {
+        return ResponseEntity.ok(empleadoService.findAll());
     }
 
     @PostMapping("/crearEmpleados")

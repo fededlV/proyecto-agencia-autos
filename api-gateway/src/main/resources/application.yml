@@ -1,5 +1,5 @@
 server:
-  port: 8080  # Puerto en el que se ejecutará el API Gateway
+  port: 8081  # Puerto en el que se ejecutará el API Gateway
 
 spring:
   application:
@@ -13,33 +13,12 @@ spring:
     gateway:
       routes:
         - id: pruebas-service
-          uri: http://localhost:8081  # URL del servicio pruebas
+          uri: http://localhost:8082  # puerto del servicio de pruebas
           predicates:
-            - Path=/api/pruebas/**
             - Path=/api/empleados/**
           metadata:
             roles: Empleado
 
-        - id: notificaciones-service
-          uri: http://localhost:8082  # URL del servicio notificaciones
-          predicates:
-            - Path=/api/notificaciones/**
-          metadata:
-            roles: Empleado
-
-        - id: posiciones-service
-          uri: http://localhost:8082  # URL del servicio Posiciones (notificacion y posiciones son el mismo servicio)
-          predicates:
-            - Path=/api/posiciones/**
-          metadata:
-            roles: Vehículo
-
-        - id: reportes-service
-          uri: http://localhost:8082 #URL del servicio reportes
-          predicates:
-            - Path=/api/reportes/**
-          metadata:
-            roles: Admin
 
 keycloak:
   realm: backend-tps
@@ -53,6 +32,9 @@ external:
   api:
     configuracion-url: "https://labsys.frc.utn.edu.ar/apps-disponibilizadas/backend/api/v1/configuracion/"
 
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
 
 
 
