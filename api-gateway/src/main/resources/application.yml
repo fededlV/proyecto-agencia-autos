@@ -16,8 +16,9 @@ spring:
           uri: http://localhost:8082  # puerto del servicio de pruebas
           predicates:
             - Path=/api/empleados/**
+            - Path=/api/pruebas/**
           metadata:
-            roles: Empleado
+            roles: EMPLEADO
 
 
 keycloak:

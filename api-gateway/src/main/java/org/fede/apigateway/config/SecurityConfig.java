@@ -25,7 +25,7 @@ public class SecurityConfig  {
         http
                 .csrf((csrf -> csrf.disable())) //Deshabilita CSRF ya que fue eliminado a partir de Spring security 6
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/empleados/**").hasRole("ADMIN")
+                        .requestMatchers("/api/empleados/**").hasRole("EMPLEADO")
                         .requestMatchers("/crear", "/enviarNotificacion").hasRole("EMPLEADO")
                         .requestMatchers("/enviarPosicion").hasRole("VEHICULO")
                         .requestMatchers("/verReportes").hasRole("ADMIN")
