@@ -1,9 +1,9 @@
 package org.fede.pruebas.services;
 
 import org.fede.pruebas.dto.NotificacionDto;
-import org.fede.pruebas.entities.Interesado;
+import org.fede.pruebas.entities.Empleado;
 import org.fede.pruebas.entities.Notificacion;
-import org.fede.pruebas.repositories.InteresadoRepository;
+import org.fede.pruebas.repositories.EmpleadoRepository;
 import org.fede.pruebas.repositories.NotificacionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ class NotificacionServiceTest {
     private NotificacionRepository notificacionRepository;
 
     @Mock
-    private InteresadoRepository interesadoRepository;
+    private EmpleadoRepository empleadoRepository;
 
     @Mock
     private NotificacionMapper notificacionMapper;
@@ -32,7 +32,7 @@ class NotificacionServiceTest {
     @InjectMocks
     private NotificacionService notificacionService;
 
-    private Interesado interesado;
+    private Empleado empleado;
     private NotificacionDto notificacionDto;
     private Notificacion notificacion;
 
@@ -40,18 +40,18 @@ class NotificacionServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        interesado = new Interesado();
-        interesado.setId(1);
+        empleado = new Empleado();
+        empleado.setLegajo(1);
 
-        notificacionDto = new NotificacionDto(1, "Mensaje de prueba", LocalDateTime.now());
-        notificacion = new Notificacion(interesado, "Mensaje de prueba", LocalDateTime.now());
+        notificacionDto = new NotificacionDto(1, "Mensaje de prueba", LocalDateTime.now(), false);
+        notificacion = new Notificacion(empleado, "Mensaje de prueba", LocalDateTime.now(), false);
         notificacion.setId(1);
     }
 
     @Test
     void createNotificacion_Success() {
-        when(interesadoRepository.findById(1)).thenReturn(Optional.of(interesado));
-        when(notificacionMapper.toNotificacion(notificacionDto, interesado)).thenReturn(notificacion);
+        when(empleadoRepository.findById(1)).thenReturn(Optional.of(empleado));
+        when(notificacionMapper.toNotificacion(notificacionDto, empleado)).thenReturn(notificacion);
         when(notificacionRepository.save(notificacion)).thenReturn(notificacion);
         when(notificacionMapper.toNotificacionDto(notificacion)).thenReturn(notificacionDto);
 
@@ -69,7 +69,7 @@ class NotificacionServiceTest {
         List<NotificacionDto> result = notificacionService.findAll();
 
         assertEquals(1, result.size());
-        assertEquals(notificacionDto, result.get(0));
+        assertEquals(notificacionDto, result.getFirst());
     }
 
     @Test

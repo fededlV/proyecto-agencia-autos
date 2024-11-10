@@ -18,8 +18,8 @@ public class Notificacion {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "interesado_id", nullable = false)
-    private Interesado interesado;
+    @JoinColumn(name = "empleado_id", nullable = false)
+    private Empleado empleado;
 
     @Column(nullable = false)
     private String mensaje;
@@ -27,12 +27,16 @@ public class Notificacion {
     @Column(name = "fecha_envio", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime fechaEnvio;
 
+    @Column(name = "es_incidente", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean esIncidente = false;
+
     public Notificacion() {
     }
 
-    public Notificacion(Interesado interesado, String mensaje, LocalDateTime fechaEnvio) {
-        this.interesado = interesado;
+    public Notificacion(Empleado empleado, String mensaje, LocalDateTime fechaEnvio, Boolean esIncidente) {
+        this.empleado = empleado;
         this.mensaje = mensaje;
         this.fechaEnvio = fechaEnvio;
+        this.esIncidente = esIncidente;
     }
 }
