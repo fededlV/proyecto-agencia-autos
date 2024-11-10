@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
+@Table(name = "Pruebas")
 public class Prueba {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

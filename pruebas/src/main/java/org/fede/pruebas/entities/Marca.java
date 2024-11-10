@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Table(name = "Marcas")
 public class Marca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
