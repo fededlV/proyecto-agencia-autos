@@ -1,7 +1,7 @@
 package org.fede.pruebas.services;
 
 import org.fede.pruebas.dto.NotificacionDto;
-import org.fede.pruebas.entities.Interesado;
+import org.fede.pruebas.entities.Empleado;
 import org.fede.pruebas.entities.Notificacion;
 import org.springframework.stereotype.Service;
 
@@ -15,25 +15,25 @@ public class NotificacionMapper {
             throw new NullPointerException("La notificación no debería ser nula");
         }
         return new NotificacionDto(
-                notificacion.getInteresado().getId(),
+                notificacion.getEmpleado().getLegajo(),
                 notificacion.getMensaje(),
-                notificacion.getFechaEnvio()
+                notificacion.getFechaEnvio(),
+                notificacion.getEsIncidente()
         );
     }
 
-
-    public Notificacion toNotificacion(NotificacionDto dto, Interesado interesado) {
+    public Notificacion toNotificacion(NotificacionDto dto, Empleado empleado) {
         if (dto == null) {
             throw new NullPointerException("El DTO de notificación no debería ser nulo");
         }
-        if (interesado == null) {
-            throw new NullPointerException("El interesado no debería ser nulo");
+        if (empleado == null) {
+            throw new NullPointerException("El empleado no debería ser nulo");
         }
         return new Notificacion(
-                interesado,
+                empleado,
                 dto.mensaje(),
-                dto.fechaEnvio() != null ? dto.fechaEnvio() : LocalDateTime.now()
+                dto.fechaEnvio() != null ? dto.fechaEnvio() : LocalDateTime.now(),
+                dto.esIncidente() != null ? dto.esIncidente() : false
         );
     }
-
 }

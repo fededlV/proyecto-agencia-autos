@@ -3,8 +3,9 @@ package org.fede.pruebas.dto;
 import java.time.LocalDateTime;
 
 public record NotificacionDto(
-        Integer interesadoId,
+        Integer empleadoId,
         String mensaje,
-        LocalDateTime fechaEnvio
+        LocalDateTime fechaEnvio,
+        Boolean esIncidente
 ) {
 }
