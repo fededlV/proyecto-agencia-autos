@@ -11,9 +11,16 @@ public class GWConfig {
 
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder,
-                                     @Value("${url.microservicio.pruebas}") String uriPruebas) {
+                                     @Value("${url.microservicio.pruebas}") String uriPruebas,
+                                     @Value("${url.microservicio.notificaciones}") String uriNotificaciones,
+                                     @Value("${url.microservicio.reportes}") String uriReportes,
+                                     @Value("${url.microservicio.posiciones}") String uriPosiciones
+    ) {
         return builder.routes()
-                .route(p -> p.path("/api/empleados/**").uri(uriPruebas))
+                .route(p -> p.path("/api/pruebas/**").uri(uriPruebas))
+                .route(p -> p.path("/api/notificaciones/**").uri(uriNotificaciones))
+                .route(p -> p.path("/api/reportes/**").uri(uriReportes))
+                .route(p -> p.path("/api/posiciones/**").uri(uriPosiciones))
                 .build();
     }
 }
