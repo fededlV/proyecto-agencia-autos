@@ -45,7 +45,7 @@ public class Prueba {
     public Prueba() {
     }
 
-    public Prueba(LocalDateTime fechHoraInicio, String comentarios, LocalDateTime fechHoraFin, Vehiculo vehiculo, Interesado interesado, Empleado empleado) {
+    public Prueba(LocalDateTime fechHoraInicio, String comentarios, LocalDateTime fechHoraFin, Vehiculo vehiculo, Cliente interesado, Empleado empleado) {
         this.fechaHoraInicio = fechHoraInicio;
         this.comentarios = comentarios;
         this.fechaHoraFin = fechHoraFin;

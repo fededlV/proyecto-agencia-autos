@@ -1,15 +1,13 @@
 package org.fede.servicioreportes.services;
 
-import org.fede.servicioreportes.dto.PruebaDTO;
-import org.fede.servicioreportes.entities.Posicion;
+import org.fede.servicioreportes.dto.Coordenadas;
+import org.fede.servicioreportes.dto.ConfiguracionDto;
+import org.fede.servicioreportes.dto.IncidenteDTO;
 import org.fede.servicioreportes.entities.Prueba;
-import org.fede.servicioreportes.repositories.PosicionRepository;
 import org.fede.servicioreportes.repositories.PruebaRepository;
-import org.fede.servicioreportes.repositories.VehiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,66 +18,76 @@ public class ReporteService {
     private PruebaRepository pruebaRepository;
 
     @Autowired
-    private PosicionRepository posicionRepository;
+    private ConfiguracionService configuracionService;
 
     @Autowired
-    private ApiGatewayClient apiGatewayClient;
+    private UbicacionService ubicacionService;
 
-    // Reporte de incidentes (pruebas que excedieron los límites)
-    public List<Prueba> obtenerIncidentes() {
-        List<Prueba> incidentes = new ArrayList<>();
+    // Punto i. Reporte de incidentes
+    public List<IncidenteDTO> obtenerIncidentes() {
+        // Obtener configuracion de la agencia
+        ConfiguracionDto configuracion = configuracionService.obtenerConfiguracion();
+        double radioAdmitido = configuracion.getRadioAdmitidoKm();
+        Coordenadas agenciaCoords = configuracion.getCoordenadasAgencia();
+        List<ConfiguracionDto.ZonaRestringida> zonasRestringidas = configuracion.getZonasRestringidas();
+
+        //Obtener pruebas en curso
         List<Prueba> pruebasEnCurso = pruebaRepository.findPruebasEnCurso();
+        List<IncidenteDTO> incidentes = new ArrayList<>();
 
+        //Evaluar cada prueba
         for (Prueba prueba : pruebasEnCurso) {
-            List<Posicion> posiciones = posicionRepository.findByVehiculoIdAndFechaHoraBetween(
-                    prueba.getIdVehiculo(), prueba.getFechaHoraInicio(), prueba.getFechaHoraFin()
-            );
+            Coordenadas ubicacionActual = ubicacionService.obtenerUbicacionVehiculo(Long.valueOf(prueba.getVehiculo().getId()));
 
-            double radioMaximo = apiGatewayClient.obtenerRadioMaximo();
-            List<ZonaPeligrosa> zonasPeligrosas = apiGatewayClient.obtenerZonasPeligrosas();
+            //Verificar si esta fuera del radio admitido
+            if(excedeRadioAdmitido(agenciaCoords, ubicacionActual, radioAdmitido)){
+                incidentes.add(crearIncidente(prueba, "El vehiculo excedio el radio admitido de " + radioAdmitido + "km"));
+                continue;
+            }
 
-            for (Posicion posicion : posiciones) {
-                if (calcularDistanciaDesdeAgencia(posicion) > radioMaximo || esEnZonaPeligrosa(posicion, zonasPeligrosas)) {
-                    incidentes.add(prueba);
-                    break;
-                }
+            //Verificar si esta dentro de una zaon restringida
+            if(estaEnZonaRestringida(ubicacionActual, zonasRestringidas)){
+                incidentes.add(crearIncidente(prueba, "El vehiculo ingreso a una zona restringida"));
             }
         }
         return incidentes;
     }
 
-    public List<Prueba> obtenerIncidentesPorEmpleado(Long empleadoId) {
-        return pruebaRepository.findIncidentesPorEmpleado(empleadoId);
+    private boolean excedeRadioAdmitido(Coordenadas agencia, Coordenadas actual, double radioAdmitidoKm){
+        double distancia = calcularDistancia(agencia, actual);
+        return distancia > radioAdmitidoKm;
     }
 
-    public double calcularKilometrosRecorridos(Long vehiculoId, LocalDate fechaInicio, LocalDate fechaFin) {
-        List<Posicion> posiciones = posicionRepository.findByVehiculoIdAndFechaHoraBetween(
-                vehiculoId, fechaInicio.atStartOfDay(), fechaFin.atTime(23, 59, 59)
-        );
-
-        double totalDistancia = 0;
-        for (int i = 1; i < posiciones.size(); i++) {
-            totalDistancia += calcularDistanciaEntrePosiciones(posiciones.get(i - 1), posiciones.get(i));
+    private boolean estaEnZonaRestringida(Coordenadas ubicacion, List<ConfiguracionDto.ZonaRestringida> zonasRestringidas) {
+        for (ConfiguracionDto.ZonaRestringida zona : zonasRestringidas) {
+            Coordenadas noroeste = zona.getNoroeste();
+            Coordenadas sureste = zona.getSureste();
+            if (ubicacion.getLat() >= noroeste.getLat() && ubicacion.getLat() <= sureste.getLat() &&
+                    ubicacion.getLon() >= noroeste.getLon() && ubicacion.getLon() <= sureste.getLon()) {
+                return true;
+            }
         }
-        return totalDistancia;
+        return false;
     }
 
-    public List<Prueba> obtenerPruebasPorVehiculo(Long vehiculoId) {
-        return pruebaRepository.findByVehiculoId(vehiculoId);
+    private double calcularDistancia(Coordenadas c1, Coordenadas c2) {
+        final int RADIO_TIERRA_KM = 6371;
+        double latDiff = Math.toRadians(c2.getLat() - c1.getLat());
+        double lonDiff = Math.toRadians(c2.getLon() - c1.getLon());
+        double a = Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
+                Math.cos(Math.toRadians(c1.getLat())) * Math.cos(Math.toRadians(c2.getLat())) *
+                        Math.sin(lonDiff / 2) * Math.sin(lonDiff / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return RADIO_TIERRA_KM * c;
     }
 
-    // Métodos auxiliares para cálculos de distancia y verificación de zonas
-    private double calcularDistanciaDesdeAgencia(Posicion posicion) {
-        // Implementar cálculo de distancia con respecto a la latitud/longitud de la agencia
-    }
-
-    private boolean esEnZonaPeligrosa(Posicion posicion, List<ZonaPeligrosa> zonasPeligrosas) {
-        // Implementar lógica para verificar si la posición está en una zona peligrosa
-    }
-
-    private double calcularDistanciaEntrePosiciones(Posicion p1, Posicion p2) {
-        double latDiff = p2.getLatitud() - p1.getLatitud();
-        double lonDiff = p2.getLongitud() - p1.getLongitud();
-        return Math.sqrt(Math.pow(latDiff, 2) + Math.pow(lonDiff, 2));
+    private IncidenteDTO crearIncidente(Prueba prueba, String descripcion) {
+        IncidenteDTO incidente = new IncidenteDTO();
+        incidente.setPruebaId(Long.valueOf(prueba.getId()));
+        incidente.setVehiculoId(Long.valueOf(prueba.getVehiculo().getId()));
+        incidente.setDescripcion(descripcion);
+        incidente.setFechaIncidente(java.time.LocalDateTime.now());
+        return incidente;
     }
 }
+

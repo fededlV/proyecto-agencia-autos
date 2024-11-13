@@ -7,5 +7,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PosicionRepository extends JpaRepository<Posicion, Integer> {
-    List<Posicion> findByVehiculoIdAndTimestampBetween(Integer vehiculoId, LocalDateTime fechaInicio, LocalDateTime fechaFin);
+    List<Posicion> findByVehiculoIdAndTimestampBetween(Long vehiculoId, LocalDateTime fechaInicio, LocalDateTime fechaFin);
 }
