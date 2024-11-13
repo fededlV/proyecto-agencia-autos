@@ -29,6 +29,8 @@
     <properties>
         <java.version>21</java.version>
         <spring-cloud.version>2023.0.3</spring-cloud.version>
+        <!-- Agregar la propiedad para la codificación de recursos -->
+        <maven.resources.encoding>UTF-8</maven.resources.encoding>
     </properties>
     <dependencies>
         <dependency>
@@ -53,7 +55,6 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.46.1.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -86,12 +87,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
         </dependency>
-
-
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -107,6 +105,20 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <!-- Si usas filtros, puedes agregarlos aquí -->
+                    <!--
+                    <filters>
+                        <filter>src/main/resources/filter.properties</filter>
+                    </filters>
+                    -->
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

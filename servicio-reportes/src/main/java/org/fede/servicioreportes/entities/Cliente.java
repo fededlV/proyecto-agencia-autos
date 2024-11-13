@@ -43,10 +43,10 @@ public class Cliente {
     @OneToMany(mappedBy = "interesado")
     private List<Prueba> pruebas;
 
-    public Interesado() {
+    public Cliente() {
     }
 
-    public Interesado(String tipoDoc, String documento, String nombre, String apellido, Boolean restringido, Integer nroLicencia, LocalDateTime fechaVenLicencia, List<Prueba> pruebas) {
+    public Cliente(String tipoDoc, String documento, String nombre, String apellido, Boolean restringido, Integer nroLicencia, LocalDateTime fechaVenLicencia, List<Prueba> pruebas) {
         this.tipoDoc = tipoDoc;
         this.documento = documento;
         this.nombre = nombre;
