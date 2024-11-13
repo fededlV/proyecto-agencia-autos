@@ -23,8 +23,13 @@ public class ReporteController {
     // Endpoint para obtener todos los incidentes
     @GetMapping("/incidentes")
     public ResponseEntity<List<IncidenteDTO>> obtenerIncidentes() {
-        List<IncidenteDTO> incidentes = reporteService.obtenerIncidentes();
-        return ResponseEntity.ok(incidentes);  // Devolver IncidenteDTO, no Prueba
+        try {
+            List<IncidenteDTO> incidentes = reporteService.obtenerIncidentes();
+            return ResponseEntity.ok(incidentes);  // Devolver la lista de incidentes
+        } catch (Exception e) {
+            // Manejo de errores
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     /*

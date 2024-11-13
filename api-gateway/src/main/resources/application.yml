@@ -1,0 +1,38 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: api-gateway
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://labsys.frc.utn.edu.ar/aim/realms/backend-tps
+
+  main:
+    allow-bean-definition-overriding: true
+
+keycloak:
+  realm: backend-tps
+  auth-server-url: https://labsys.frc.utn.edu.ar/aim/
+  client-id: cliente-tpi
+  client-secret: ZmiMMce6zh4xKHde1FFKbfkiThDyYpyn
+  confidential-port: 0
+  principal-attribute: preferred_username
+
+external:
+  api:
+    configuracion-url: https://labsys.frc.utn.edu.ar/apps-disponibilizadas/backend/api/v1/configuracion/
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+
+url:
+  microservicio:
+    pruebas: http://localhost:8082
+    notificaciones: http://localhost:8083
+    posiciones: http://localhost:8083
+    reportes: http://localhost:8084

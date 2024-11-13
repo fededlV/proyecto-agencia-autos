@@ -1,0 +1,28 @@
+server:
+  port: 8084  # Aquí defines el puerto en el que el servicio se va a ejecutar
+
+spring:
+  application:
+    name: servicio-reportes
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:sqlite:../agencia.db
+    driver-class-name: org.sqlite.JDBC
+  security:
+    user:
+      name: admin
+      password: admin123
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+
+external:
+  api:
+    configuracion-url: https://labsys.frc.utn.edu.ar/apps-disponibilizadas/backend/api/v1/configuracion/

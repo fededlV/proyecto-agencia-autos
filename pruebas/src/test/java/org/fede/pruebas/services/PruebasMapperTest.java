@@ -5,10 +5,7 @@ import org.fede.pruebas.dto.PruebaResponseDto;
 import org.fede.pruebas.entities.Prueba;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.cglib.core.Local;
-import org.springframework.security.core.parameters.P;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
