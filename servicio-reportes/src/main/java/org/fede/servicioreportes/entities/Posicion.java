@@ -18,8 +18,8 @@ public class Posicion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id;
 
-    @Column(name = "timestamp")  // Si tu columna en la base de datos se llama "timestamp"
-    private LocalDateTime timestamp;
+    @Column(name = "fecha_hora")
+    private LocalDateTime fechaHora;
 
     @Column(nullable = false)
     private Double latitud;
@@ -35,8 +35,8 @@ public class Posicion {
     public Posicion() {
     }
 
-    public Posicion(LocalDateTime timestamp, Double latitud, Double longitud, Vehiculo vehiculo) {
-        this.timestamp = timestamp;
+    public Posicion(LocalDateTime fechaHora, Double latitud, Double longitud, Vehiculo vehiculo) {
+        this.fechaHora = fechaHora;
         this.latitud = latitud;
         this.longitud = longitud;
         this.vehiculo = vehiculo;

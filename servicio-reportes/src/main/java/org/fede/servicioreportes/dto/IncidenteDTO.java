@@ -1,17 +1,12 @@
 package org.fede.servicioreportes.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import org.fede.servicioreportes.entities.Posicion;
 
-import java.time.LocalDateTime;
-
-@Getter
-@Setter
-public class IncidenteDTO {
-    private Long pruebaId;
-    private Long vehiculoId;
-    private String descripcion;
-    private LocalDateTime fechaIncidente;
-
-    // Getters y Setters
+public record IncidenteDTO(
+        Integer pruebaId,
+        Integer vehiculoId,
+        Integer clienteId,
+        Posicion posicion,
+        String descripcion
+) {
 }

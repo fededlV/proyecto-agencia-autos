@@ -17,4 +17,6 @@ public interface PruebaRepository extends JpaRepository<Prueba, Long> {
 
     List<Prueba> findByVehiculoId(Long vehiculoId);
     */
+
+    List<Prueba> findPruebaByVehiculo(Integer vehiculoId);
 }
