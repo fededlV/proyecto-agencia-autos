@@ -1,11 +1,29 @@
 package org.fede.servicioubiynoti.dto;
 
-import java.time.LocalDateTime;
+public class PosicionDto {
+    private double x; // Coordenada X
+    private double y; // Coordenada Y
 
-public record PosicionDto(
-        LocalDateTime fechaHora,
-        Double longitud,
-        Double latitud,
-        Integer vehiculoId
-) {
+    public PosicionDto() {}
+
+    public PosicionDto(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
 }

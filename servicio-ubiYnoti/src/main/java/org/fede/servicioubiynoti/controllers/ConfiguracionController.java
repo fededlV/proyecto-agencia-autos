@@ -1,19 +1,29 @@
 package org.fede.servicioubiynoti.controllers;
 
-import org.fede.servicioreportes.dto.ConfiguracionDto;
-import org.fede.servicioreportes.services.ConfiguracionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.fede.servicioubiynoti.dto.PosicionDto;
+import org.fede.servicioubiynoti.services.ValidacionService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class ConfiguracionController {
+@RequestMapping("/api/vehiculos")
+public class VehiculoController {
 
-    @Autowired
-    private ConfiguracionService configuracionService;
+    private final ValidacionService validacionService;
 
-    @GetMapping("/api/configuracion")
-    public ConfiguracionDto obtenerConfiguracion() {
-        return configuracionService.obtenerConfiguracion();
+    public VehiculoController(ValidacionService validacionService) {
+        this.validacionService = validacionService;
+    }
+
+    @PostMapping("/{vehiculoId}/posicion")
+    public ResponseEntity<String> registrarPosicion(
+            @PathVariable Integer vehiculoId,
+            @RequestBody PosicionDto posicionDto) {
+        boolean result = validacionService.validarPosicion(vehiculoId, posicionDto);
+        if (result) {
+            return ResponseEntity.ok("Posición registrada y validada.");
+        } else {
+            return ResponseEntity.badRequest().body("El vehículo infringió las reglas.");
+        }
     }
 }

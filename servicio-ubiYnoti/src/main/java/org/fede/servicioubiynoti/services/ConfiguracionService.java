@@ -1,28 +1,64 @@
 package org.fede.servicioubiynoti.services;
 
-import org.fede.servicioreportes.dto.ConfiguracionDto;
-import org.springframework.beans.factory.annotation.Value;
+import org.fede.servicioubiynoti.dto.PosicionDto;
+import org.fede.servicioubiynoti.entities.Notificacion;
+import org.fede.servicioubiynoti.repositories.NotificacionRepository;
+import org.fede.servicioubiynoti.repositories.PruebaRepository;
+import org.fede.servicioubiynoti.repositories.VehiculoRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.ResponseEntity;
 
 @Service
-public class ConfiguracionService {
+public class ValidacionService {
 
-    private final RestTemplate restTemplate;
-    private final String configuracionUrl;
+    private final PruebaRepository pruebaRepository;
+    private final VehiculoRepository vehiculoRepository;
+    private final NotificacionRepository notificacionRepository;
 
-    // Inyección de la URL desde el archivo de propiedades
-    public ConfiguracionService(RestTemplate restTemplate, @Value("${external.api.configuracion-url}") String configuracionUrl) {
-        this.restTemplate = restTemplate;
-        this.configuracionUrl = configuracionUrl;
+    public ValidacionService(PruebaRepository pruebaRepository,
+                             VehiculoRepository vehiculoRepository,
+                             NotificacionRepository notificacionRepository) {
+        this.pruebaRepository = pruebaRepository;
+        this.vehiculoRepository = vehiculoRepository;
+        this.notificacionRepository = notificacionRepository;
     }
 
-    public ConfiguracionDto obtenerConfiguracion() {
-        // Realizando la solicitud GET con RestTemplate
-        ResponseEntity<ConfiguracionDto> response = restTemplate.getForEntity(configuracionUrl, ConfiguracionDto.class);
+    public boolean validarPosicion(Integer vehiculoId, PosicionDto posicionDto) {
+        // Verificar si el vehículo está en una prueba activa
+        var pruebaActiva = pruebaRepository.findPruebaActivaByVehiculoId(vehiculoId);
+        if (pruebaActiva == null) {
+            return false;
+        }
 
-        // Retornamos el cuerpo de la respuesta (ConfiguracionDto)
-        return response.getBody();
+        // Validar si la posición está dentro del radio permitido
+        if (!esPosicionPermitida(posicionDto)) {
+            guardarNotificacion(vehiculoId, "El vehículo está fuera del radio permitido.");
+            return false;
+        }
+
+        // Validar si la posición está en una zona restringida
+        if (esZonaRestringida(posicionDto)) {
+            guardarNotificacion(vehiculoId, "El vehículo ingresó a una zona restringida.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean esPosicionPermitida(PosicionDto posicionDto) {
+        // Implementar cálculo de distancia usando Haversine
+        return true; // Aquí iría la lógica real
+    }
+
+    private boolean esZonaRestringida(PosicionDto posicionDto) {
+        // Verificar si la posición está dentro de los límites de las zonas restringidas
+        return false; // Aquí iría la lógica real
+    }
+
+    private void guardarNotificacion(Integer vehiculoId, String mensaje) {
+        Notificacion notificacion = new Notificacion();
+        notificacion.setMensaje(mensaje);
+        notificacion.setEsIncidente(true);
+        notificacion.setEmpleado(null); // Asociar con un empleado si aplica
+        notificacionRepository.save(notificacion);
     }
 }
