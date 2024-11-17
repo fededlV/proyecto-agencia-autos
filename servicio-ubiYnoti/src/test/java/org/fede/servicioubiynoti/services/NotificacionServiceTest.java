@@ -3,6 +3,7 @@ package org.fede.servicioubiynoti.services;
 import org.fede.servicioubiynoti.dto.ConfiguracionDTO;
 import org.fede.servicioubiynoti.entities.Posicion;
 import org.fede.servicioubiynoti.repositories.NotificacionRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -11,8 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class NotificacionServiceTest {
 
@@ -22,6 +22,7 @@ class NotificacionServiceTest {
 
     @BeforeEach
     void setUp() {
+        // Mockea las dependencias
         restTemplateMock = Mockito.mock(RestTemplate.class);
         notificacionRepositoryMock = Mockito.mock(NotificacionRepository.class);
         notificacionService = new NotificacionService(restTemplateMock, notificacionRepositoryMock);
@@ -40,6 +41,11 @@ class NotificacionServiceTest {
         Mockito.when(restTemplateMock.getForObject(
                 Mockito.anyString(), Mockito.eq(ConfiguracionDTO.class))
         ).thenReturn(configuracion);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(restTemplateMock, notificacionRepositoryMock);
     }
 
     @Test

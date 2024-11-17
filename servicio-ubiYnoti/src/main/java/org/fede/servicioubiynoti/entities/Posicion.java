@@ -1,20 +1,23 @@
 package org.fede.servicioubiynoti.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "Posiciones")
 public class Posicion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private double latitud;
     private double longitud;
     private LocalDateTime fechaHora;
+
+    @ManyToOne
+    @JoinColumn(name = "id_vehiculo")  // Nombre de la columna que se unirá con Vehiculo
+    private Vehiculo vehiculo;  // Propiedad para mapear la relación con Vehiculo
 
     // Constructor vacío
     public Posicion() {
@@ -58,5 +61,13 @@ public class Posicion {
 
     public void setFechaHora(LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
+    }
+
+    public Vehiculo getVehiculo() {
+        return vehiculo;
+    }
+
+    public void setVehiculo(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
     }
 }

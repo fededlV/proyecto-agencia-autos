@@ -9,5 +9,4 @@ class ServicioUbiYnotiApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }
