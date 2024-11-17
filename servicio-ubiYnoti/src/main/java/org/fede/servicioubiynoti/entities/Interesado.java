@@ -13,7 +13,8 @@ import java.util.List;
 @Setter
 @ToString
 @Table(name = "Interesados")
-public class Cliente {
+public class Interesado {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id;
@@ -43,10 +44,10 @@ public class Cliente {
     @OneToMany(mappedBy = "interesado")
     private List<Prueba> pruebas;
 
-    public Cliente() {
+    public Interesado() {
     }
 
-    public Cliente(String tipoDoc, String documento, String nombre, String apellido, Boolean restringido, Integer nroLicencia, LocalDateTime fechaVenLicencia, List<Prueba> pruebas) {
+    public Interesado(String tipoDoc, String documento, String nombre, String apellido, Boolean restringido, Integer nroLicencia, LocalDateTime fechaVenLicencia, List<Prueba> pruebas) {
         this.tipoDoc = tipoDoc;
         this.documento = documento;
         this.nombre = nombre;

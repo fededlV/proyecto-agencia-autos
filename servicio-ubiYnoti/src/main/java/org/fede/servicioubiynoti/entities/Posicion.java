@@ -1,45 +1,62 @@
 package org.fede.servicioubiynoti.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
-@ToString
-@Table(name = "Posiciones")
 public class Posicion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
-
-    @Column(name = "fecha_hora", nullable = false)
+    private Integer id;
+    private double latitud;
+    private double longitud;
     private LocalDateTime fechaHora;
 
-    @Column(nullable = false)
-    private Double latitud;
-
-    @Column(nullable = false)
-    private Double longitud;
-
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "id_vehiculo")
-    private Vehiculo vehiculo;
-
+    // Constructor vacío
     public Posicion() {
     }
 
-    public Posicion(LocalDateTime fechaHora, Double latitud, Double longitud, Vehiculo vehiculo) {
-        this.fechaHora = fechaHora;
+    // Constructor con parámetros
+    public Posicion(double latitud, double longitud, LocalDateTime fechaHora) {
         this.latitud = latitud;
         this.longitud = longitud;
-        this.vehiculo = vehiculo;
+        this.fechaHora = fechaHora;
+    }
+
+    // Getters y setters
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    public double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
+    }
+
+    public LocalDateTime getFechaHora() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(LocalDateTime fechaHora) {
+        this.fechaHora = fechaHora;
     }
 }

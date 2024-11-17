@@ -1,28 +1,30 @@
 package org.fede.servicioubiynoti.controllers;
 
-import org.fede.servicioubiynoti.dto.PosicionDto;
-import org.fede.servicioubiynoti.services.ValidacionService;
+import org.fede.servicioubiynoti.services.NotificacionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/vehiculos")
+@RequestMapping("/api/vehiculos")
 public class VehiculoController {
 
-    private final ValidacionService validacionService;
+    private final NotificacionService notificacionService;
 
-    public VehiculoController(ValidacionService validacionService) {
-        this.validacionService = validacionService;
+    public VehiculoController(NotificacionService notificacionService) {
+        this.notificacionService = notificacionService;
     }
 
-    @PostMapping("/validar-posicion")
-    public ResponseEntity<String> validarPosicion(@RequestBody PosicionDto posicionDto) {
-        boolean valida = validacionService.validarPosicion(posicionDto);
-
-        if (valida) {
-            return ResponseEntity.ok("La posición es válida.");
+    @PostMapping("/evaluar-posicion")
+    public ResponseEntity<String> evaluarPosicion(@RequestBody Map<String, Double> posicion) {
+        boolean resultado = notificacionService.evaluarPosicionVehiculo(
+                posicion.get("latitud"),
+                posicion.get("longitud"));
+        if (resultado) {
+            return ResponseEntity.ok("Notificación generada y almacenada.");
         } else {
-            return ResponseEntity.badRequest().body("La posición no es válida.");
+            return ResponseEntity.ok("El vehículo está dentro de los límites permitidos.");
         }
     }
 }

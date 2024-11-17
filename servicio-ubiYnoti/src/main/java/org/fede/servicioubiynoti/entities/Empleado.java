@@ -14,6 +14,8 @@ import java.util.List;
 @Table(name = "Empleados")
 public class Empleado {
     @Id
+    @Getter
+    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer legajo;
 
