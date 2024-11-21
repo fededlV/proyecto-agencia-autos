@@ -1,7 +1,10 @@
 package org.fede.servicioreportes.services;
 
+import org.fede.servicioreportes.dto.IncidenteDTO;
 import org.fede.servicioreportes.dto.PruebaResponseDTO;
 import org.fede.servicioreportes.entities.*;
+import org.fede.servicioreportes.model.Coordenada;
+import org.fede.servicioreportes.model.ZonaRestringida;
 import org.fede.servicioreportes.repositories.PosicionRepository;
 import org.fede.servicioreportes.repositories.PruebaRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +22,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ReporteServiceTest {
+
+    @Mock
+    private ConfiguracionService configuracionService;
 
     @Mock
     private PosicionRepository posicionRepository;
@@ -103,7 +109,44 @@ class ReporteServiceTest {
         assertEquals(dto1, resultado.get(0), "El primer DTO debe coincidir con la primer prueba");
         assertEquals(dto2, resultado.get(1), "El segundo DTO debe coincidir con la segunda prueba");
         verify(pruebaRepository, times(1)).findPruebaByVehiculo(vehiculoId);
+    }
+
+    @Test
+    void generarReporteDeIncidentes_DeberiaRetornarIncidentesCorrectos() {
+        // Mock datos de configuración
+        when(configuracionService.obtenerUbicacionAgencia()).thenReturn(new Coordenada(42.508867, 1.534713));
+        when(configuracionService.obtenerRadioPermitido()).thenReturn(5.0);
+        when(configuracionService.obtenerZonasRestringida()).thenReturn(List.of(
+                new ZonaRestringida(new Coordenada(42.510006, 1.536654), new Coordenada(42.508744, 1.538775))
+        ));
+
+        // Mock datos de prueba y posición
+        int id = 1;
+        Vehiculo vehiculo = new Vehiculo();
+        vehiculo.setId(id);
+        Cliente cliente = new Cliente();
+        cliente.setId(id);
+        Empleado empleado = new Empleado();
+        empleado.setLegajo(id);
+
+        Posicion posicion = new Posicion(LocalDateTime.now(), 42.511, 1.537, vehiculo);
+        posicion.setId(id);
+        assertNotNull(posicion.getLatitud(), "La latitud de la posición no debe ser nula");
+        assertNotNull(posicion.getLongitud(), "La longitud de la posición no debe ser nula");
+
+        Prueba prueba = new Prueba(LocalDateTime.now().minusDays(1), "Comentario de prueba",  LocalDateTime.now(), vehiculo, cliente, empleado);
+        prueba.setId(id);
 
 
+        // Mock de repositorios
+        when(pruebaRepository.findAll()).thenReturn(List.of(prueba)); // Devolver la prueba en la base de datos simulada
+        when(posicionRepository.findByVehiculoId(vehiculo.getId())).thenReturn(List.of(posicion)); // Devolver la posición del vehículo
+
+        // Ejecutar el método
+        List<IncidenteDTO> incidentes = reporteService.generarReporteIncidentes();
+
+        // Validar resultados
+        assertEquals(1, incidentes.size(), "Se espera 1 incidente.");
+        assertEquals("Ingresó a una zona peligrosa", incidentes.get(0).descripcion(), "La descripción del incidente no es la esperada.");
     }
 }

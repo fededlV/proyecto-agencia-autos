@@ -2,6 +2,8 @@ package org.fede.servicioreportes.services;
 
 import org.fede.servicioreportes.dto.*;
 import org.fede.servicioreportes.entities.*;
+import org.fede.servicioreportes.model.Coordenada;
+import org.fede.servicioreportes.model.ZonaRestringida;
 import org.fede.servicioreportes.repositories.PosicionRepository;
 import org.fede.servicioreportes.repositories.PruebaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,64 +29,48 @@ public class ReporteService {
     private PosicionRepository posicionRepository;
 
     // Punto i. Reporte de incidentes
-    /*public List<IncidenteDTO> obtenerIncidentes() {
-        // Obtener configuracion de la agencia
-        ConfiguracionDto configuracion = configuracionService.obtenerConfiguracion();
-        double radioAdmitido = configuracion.getRadioAdmitidoKm();
-        Coordenadas agenciaCoords = configuracion.getCoordenadasAgencia();
-        List<ConfiguracionDto.ZonaRestringida> zonasRestringidas = configuracion.getZonasRestringidas();
-
-        //Obtener pruebas en curso
-        List<Prueba> pruebasEnCurso = pruebaRepository.findPruebasEnCurso();
+    public List<IncidenteDTO> generarReporteIncidentes() {
         List<IncidenteDTO> incidentes = new ArrayList<>();
+
+        //Obtener todas las pruebas en curso o finalizadas
+        List<Prueba> pruebas = pruebaRepository.findAll(); //Lista todas las pruebas
+
+        //Obtener la configuracion necesaria
+        Coordenada agencia = configuracionService.obtenerUbicacionAgencia();
+        double radioPermitido = configuracionService.obtenerRadioPermitido();
+        List<ZonaRestringida> zonaRestringidas = configuracionService.obtenerZonasRestringida();
 
         //Evaluar cada prueba
-        for (Prueba prueba : pruebasEnCurso) {
-            Coordenadas ubicacionActual = ubicacionService.obtenerUbicacionVehiculo(Long.valueOf(prueba.getVehiculo().getId()));
-
-            //Verificar si esta fuera del radio admitido
-            if(excedeRadioAdmitido(agenciaCoords, ubicacionActual, radioAdmitido)){
-                incidentes.add(crearIncidente(prueba, "El vehiculo excedio el radio admitido de " + radioAdmitido + "km"));
-                continue;
-            }
-
-            //Verificar si esta dentro de una zaon restringida
-            if(estaEnZonaRestringida(ubicacionActual, zonasRestringidas)){
-                incidentes.add(crearIncidente(prueba, "El vehiculo ingreso a una zona restringida"));
-            }
-        }
-        return incidentes;
-    }*/
-
-    //Aca comienzo a meter lo mio FEDE
-    //Generacion de Incidentes
-    public List<IncidenteDTO> generarReporteInicidentes(Integer vehiculoId, List<ZonaRestringida> zonasRestringidas, double radioPermitido, double latitudAgencia, double longitudAgencia) {
-        List<Prueba> pruebas = pruebaRepository.findPruebaByVehiculo(vehiculoId);
-        List<IncidenteDTO> incidentes = new ArrayList<>();
         for (Prueba prueba : pruebas) {
-            List<Posicion> posiciones = posicionService.obtenerPosicionesPorVehiculoYPeriodo(vehiculoId, prueba.getFechaHoraInicio(), prueba.getFechaHoraFin());
+            List<Posicion> posiciones = posicionRepository.findByVehiculoId(prueba.getVehiculo().getId());
+
             for (Posicion posicion : posiciones) {
-                if (posicionService.estaFueraDeRango(latitudAgencia, longitudAgencia, posicion.getLatitud(), posicion.getLongitud(), radioPermitido)) {
-                    incidentes.add(
-                            new IncidenteDTO(prueba.getId(),
-                                    vehiculoId,
-                                    prueba.getInteresado().getId(),
-                                    posicion,
-                                    "Fuera de radio permitido"
+                double distancia = calcularDistanciaEuclidea(agencia, new Coordenada(posicion.getLatitud(), posicion.getLongitud()));
+
+                if(distancia > radioPermitido) {
+                    incidentes.add(new IncidenteDTO(
+                            prueba.getId(),
+                            prueba.getVehiculo().getId(),
+                            prueba.getInteresado().getId(),
+                            new Coordenada(posicion.getLatitud(), posicion.getLongitud()),
+                            "Excedio el radio permitido"
+                    ));
+                 } else if(estaEnZonaRestringida(new Coordenada(posicion.getLatitud(), posicion.getLongitud()), zonaRestringidas)) {
+                    incidentes.add(new IncidenteDTO(
+                            prueba.getId(),
+                            prueba.getVehiculo().getId(),
+                            prueba.getInteresado().getId(),
+                            new Coordenada(posicion.getLatitud(), posicion.getLongitud()),
+                            "Ingreso a una zona restringida"
                             ));
                 }
-                if (posicionService.estaEnZonaPeligrosa(zonasRestringidas, posicion.getLatitud(), posicion.getLongitud())) {
-                    incidentes.add(
-                            new IncidenteDTO(prueba.getId(),
-                            vehiculoId,
-                            prueba.getInteresado().getId(),
-                            posicion,
-                            "Ingreso a zona peligrosa"
-                    ));
-                }
             }
         }
         return incidentes;
+    }
+
+    private double calcularDistanciaEuclidea(Coordenada c1, Coordenada c2) {
+        return Math.sqrt(Math.pow(c2.getLatitud() - c1.getLatitud(), 2) + Math.pow(c2.getLongitud() - c1.getLongitud(), 2));
     }
 
     private boolean excedeRadioAdmitido(Coordenada agencia, Coordenada actual, double radioAdmitidoKm) {

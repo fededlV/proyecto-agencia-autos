@@ -1,28 +1,44 @@
 package org.fede.servicioreportes.services;
 
-import org.fede.servicioreportes.dto.ConfiguracionDto;
+import org.fede.servicioreportes.model.Configuracion;
+import org.fede.servicioreportes.model.Coordenada;
+import org.fede.servicioreportes.model.ZonaRestringida;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
 
 @Service
 public class ConfiguracionService {
 
-    private final RestTemplate restTemplate;
-    private final String configuracionUrl;
+    private final WebClient webClient;
 
-    // Inyección de la URL desde el archivo de propiedades
-    public ConfiguracionService(RestTemplate restTemplate, @Value("${external.api.configuracion-url}") String configuracionUrl) {
-        this.restTemplate = restTemplate;
-        this.configuracionUrl = configuracionUrl;
+    public ConfiguracionService(@Value("${external.api.configuracion-url}") String gatewatUrl) {
+        this.webClient = WebClient.builder()
+                .baseUrl(gatewatUrl)
+                .build();
     }
 
-    public ConfiguracionDto obtenerConfiguracion() {
-        // Realizando la solicitud GET con RestTemplate
-        ResponseEntity<ConfiguracionDto> response = restTemplate.getForEntity(configuracionUrl, ConfiguracionDto.class);
+    //Metodo para obtener toda la configuracion desde la URL
+    public Configuracion obtenerConfiguracion() {
+        return webClient.get()
+                .retrieve()
+                .bodyToMono(Configuracion.class)
+                .block();
+    }
 
-        // Retornamos el cuerpo de la respuesta (ConfiguracionDto)
-        return response.getBody();
+    //Metodos especificos para obtener cada parametro
+
+    public Coordenada obtenerUbicacionAgencia() {
+        return obtenerConfiguracion().getCoordenadasAgencia();
+    }
+
+    public double obtenerRadioPermitido() {
+        return obtenerConfiguracion().getRadioAdmitidoKm();
+    }
+
+    public List<ZonaRestringida> obtenerZonasRestringida() {
+        return obtenerConfiguracion().getZonasRestringidas();
     }
 }

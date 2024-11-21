@@ -1,12 +1,12 @@
 package org.fede.servicioreportes.dto;
 
-import org.fede.servicioreportes.entities.Posicion;
+import org.fede.servicioreportes.model.Coordenada;
 
 public record IncidenteDTO(
         Integer pruebaId,
         Integer vehiculoId,
         Integer clienteId,
-        Posicion posicion,
+        Coordenada posicion,
         String descripcion
 ) {
 }

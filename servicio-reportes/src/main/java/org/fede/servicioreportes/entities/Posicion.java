@@ -22,10 +22,10 @@ public class Posicion {
     private LocalDateTime fechaHora;
 
     @Column(nullable = false)
-    private Double latitud;
+    private double latitud;
 
     @Column(nullable = false)
-    private Double longitud;
+    private double longitud;
 
     @ManyToOne
     @JsonBackReference
@@ -35,7 +35,7 @@ public class Posicion {
     public Posicion() {
     }
 
-    public Posicion(LocalDateTime fechaHora, Double latitud, Double longitud, Vehiculo vehiculo) {
+    public Posicion(LocalDateTime fechaHora, double latitud, double longitud, Vehiculo vehiculo) {
         this.fechaHora = fechaHora;
         this.latitud = latitud;
         this.longitud = longitud;

@@ -1,23 +1,19 @@
 package org.fede.servicioreportes.services;
 
-import org.fede.servicioreportes.dto.Coordenadas;
-import org.fede.servicioreportes.dto.ConfiguracionDto;
-import org.fede.servicioreportes.entities.Coordenada;
+import org.fede.servicioreportes.model.Coordenada;
 import org.fede.servicioreportes.entities.Posicion;
-import org.fede.servicioreportes.entities.ZonaRestringida;
+import org.fede.servicioreportes.model.ZonaRestringida;
 import org.fede.servicioreportes.repositories.PosicionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class PosicionService {
 
-    private final ConfiguracionService configuracionService;
+
     //Agrugue FEDE
     @Autowired
     private PosicionRepository posicionRepository;
@@ -43,12 +39,12 @@ public class PosicionService {
         return false;
     }
 
-    private double calcularDistanciaEuclidea(double latitud1, double longitud1, double latitud2, double longitud2) {
+    public double calcularDistanciaEuclidea(double latitud1, double longitud1, double latitud2, double longitud2) {
         return Math.sqrt(Math.pow(latitud2 - latitud1, 2) + Math.pow(longitud2 - longitud1, 2));
     }
     //Hasta aca agregue FEDE.
 
-    // Constructor que inyecta ConfiguracionService
+    /*// Constructor que inyecta ConfiguracionService
     public PosicionService(ConfiguracionService configuracionService) {
         this.configuracionService = configuracionService;
     }
@@ -108,5 +104,5 @@ public class PosicionService {
     private boolean esZonaRestringida(Coordenada ubicacionVehiculo, ConfiguracionDto.ZonaRestringida zona) {
         // Lógica para verificar si las coordenadas del vehículo están dentro de los límites de la zona restringida
         return false;  // Aquí iría la lógica real para comprobar si está dentro de la zona restringida
-    }
+    }*/
 }
