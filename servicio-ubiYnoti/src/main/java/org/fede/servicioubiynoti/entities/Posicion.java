@@ -2,8 +2,14 @@ package org.fede.servicioubiynoti.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
+@Getter
+@Setter
+@ToString
 @Table(name = "Posiciones")
 public class Posicion {
 
@@ -30,44 +36,11 @@ public class Posicion {
         this.fechaHora = fechaHora;
     }
 
-    // Getters y setters
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public double getLatitud() {
         return latitud;
     }
 
-    public void setLatitud(double latitud) {
-        this.latitud = latitud;
-    }
-
     public double getLongitud() {
         return longitud;
-    }
-
-    public void setLongitud(double longitud) {
-        this.longitud = longitud;
-    }
-
-    public LocalDateTime getFechaHora() {
-        return fechaHora;
-    }
-
-    public void setFechaHora(LocalDateTime fechaHora) {
-        this.fechaHora = fechaHora;
-    }
-
-    public Vehiculo getVehiculo() {
-        return vehiculo;
-    }
-
-    public void setVehiculo(Vehiculo vehiculo) {
-        this.vehiculo = vehiculo;
     }
 }

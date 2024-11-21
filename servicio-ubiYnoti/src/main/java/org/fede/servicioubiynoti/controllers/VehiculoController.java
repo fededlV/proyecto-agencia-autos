@@ -17,10 +17,13 @@ public class VehiculoController {
     }
 
     @PostMapping("/evaluar-posicion")
-    public ResponseEntity<String> evaluarPosicion(@RequestBody Map<String, Double> posicion) {
-        boolean resultado = notificacionService.evaluarPosicionVehiculo(
-                posicion.get("latitud"),
-                posicion.get("longitud"));
+    public ResponseEntity<String> evaluarPosicion(@RequestBody Map<String, Object> posicion) {
+        Double latitud = (Double) posicion.get("latitud");
+        Double longitud = (Double) posicion.get("longitud");
+        Integer empleadoLegajo = ((Number) posicion.get("empleadoLegajo")).intValue(); // Convertir a Integer
+
+        boolean resultado = notificacionService.evaluarPosicionVehiculo(latitud, longitud, empleadoLegajo);
+
         if (resultado) {
             return ResponseEntity.ok("Notificación generada y almacenada.");
         } else {
@@ -28,3 +31,4 @@ public class VehiculoController {
         }
     }
 }
+

@@ -11,13 +11,14 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
+@Table(name = "Notificaciones")
 public class Notificacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "empleado_id", nullable = false)
     private Empleado empleado;
 
@@ -28,11 +29,13 @@ public class Notificacion {
     private LocalDateTime fechaEnvio;
 
     @Column(name = "es_incidente", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean esIncidente = false;
+    private boolean esIncidente = false;
 
+    // Constructor vacío
     public Notificacion() {
     }
 
+    // Constructor con parámetros
     public Notificacion(Empleado empleado, String mensaje, LocalDateTime fechaEnvio, Boolean esIncidente) {
         this.empleado = empleado;
         this.mensaje = mensaje;
