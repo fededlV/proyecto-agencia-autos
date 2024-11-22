@@ -25,6 +25,13 @@ public class ReporteController {
         return ResponseEntity.ok(incidentes);
     }
 
+    // Endpoint para el detalle de incidentes para un empleado
+    @GetMapping("/incidentes/empleado/{legajo}")
+    public ResponseEntity<List<IncidenteDTO>> obtenerDetalleIncidentesParaEmpleado(@PathVariable Integer legajo) {
+        List<IncidenteDTO> incidentes = reporteService.generarDetalleIncidentesParaEmpleado(legajo);
+        return ResponseEntity.ok(incidentes);
+    }
+
     // Endpoint para obtener la cantidad de kilometros de prueba
     @GetMapping("/cantidadKilometros")
     public ResponseEntity<Double> calcularCantidadKilometros(

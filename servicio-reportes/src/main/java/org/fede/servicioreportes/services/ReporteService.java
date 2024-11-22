@@ -102,6 +102,50 @@ public class ReporteService {
         return RADIO_TIERRA_KM * c; //Distancia en km. (Angulo central por el radio de la tierra).
     }
 
+    //Punto 2. Detalle de incidentes para un empleado
+    public List<IncidenteDTO> generarDetalleIncidentesParaEmpleado(Integer empleadoLegajo) {
+        List<IncidenteDTO> incidentes = new ArrayList<>();
+
+        // Obtener todas las pruebas asociadas al empleado
+        List<Prueba> pruebas = pruebaRepository.findPruebasPorEmpleado(empleadoLegajo);
+
+        //Obtener la configuracion necesaria
+        Coordenada agencia = configuracionService.obtenerUbicacionAgencia();
+        double radioPermitido = configuracionService.obtenerRadioPermitido();
+        List<ZonaRestringida> zonaRestringidas = configuracionService.obtenerZonasRestringida();
+
+        //Evaluar cada prueba
+        for (Prueba prueba : pruebas) {
+            List<Posicion> posiciones = posicionRepository.findByVehiculoId(prueba.getVehiculo().getId());
+
+            for(Posicion posicion : posiciones) {
+                Coordenada posicionActual = new Coordenada(posicion.getLatitud(), posicion.getLongitud());
+                double distancia = calcularDistancia(agencia, posicionActual);
+
+                //Identificar incidentes
+                if (distancia > radioPermitido) {
+                    incidentes.add(new IncidenteDTO(
+                            prueba.getId(),
+                            prueba.getVehiculo().getId(),
+                            prueba.getInteresado().getId(),
+                            posicionActual,
+                            "Excedio el radio permitido"
+                    ));
+                } else if (estaEnZonaRestringida(agencia, zonaRestringidas)) {
+                    incidentes.add(new IncidenteDTO(
+                            prueba.getId(),
+                            prueba.getVehiculo().getId(),
+                            prueba.getInteresado().getId(),
+                            posicionActual,
+                            "Ingreso a una zona restringida"
+                    ));
+                }
+            }
+        }
+        return incidentes;
+    }
+
+
 
     //Punto 3. Cantidad de kilometros recorridos por un vehiculo.
     public double calcularKilometrosRecorridos(Integer vehiculoId, LocalDateTime fechaInicio, LocalDateTime fechaFin) {
