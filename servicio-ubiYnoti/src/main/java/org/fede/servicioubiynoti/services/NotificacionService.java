@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class NotificacionService {
@@ -53,9 +54,12 @@ public class NotificacionService {
                     .orElseThrow(() -> new IllegalArgumentException("No se encontró un empleado con el legajo: " + empleadoLegajo));
 
             Notificacion notificacion = new Notificacion();
-            notificacion.setEmpleado(empleado); // Asociar empleado a la notificación
+            notificacion.setEmpleado(empleado);
             notificacion.setMensaje("El vehículo ha excedido los límites permitidos.");
-            notificacion.setFechaEnvio(LocalDateTime.now());
+
+            LocalDateTime now = LocalDateTime.now();
+            notificacion.setFechaEnvio(now);
+
             notificacion.setEsIncidente(true);
             notificacionRepository.save(notificacion);
             return true;
@@ -63,13 +67,10 @@ public class NotificacionService {
         return false;
     }
 
-    private boolean enZonaRestringida(Double latitud, Double longitud, ConfiguracionDTO configuracion) {
-        // Depuración: Mostrar las coordenadas del vehículo
-        System.out.println("Evaluando zona restringida para las coordenadas del vehículo:");
-        System.out.println("Latitud del vehículo: " + latitud + ", Longitud del vehículo: " + longitud);
 
+    private boolean enZonaRestringida(Double latitud, Double longitud, ConfiguracionDTO configuracion) {
         return configuracion.getZonasRestringidas().stream().anyMatch(zona -> {
-            // Obtener los límites de la zona
+
             double latNoroeste = zona.getNoroeste().getLat();
             double lonNoroeste = zona.getNoroeste().getLon();
             double latSureste = zona.getSureste().getLat();
@@ -85,10 +86,6 @@ public class NotificacionService {
     }
 
     private double calcularDistancia(Double lat1, Double lon1, Double lat2, Double lon2) {
-        // Mostrar las coordenadas originales para depuración
-        System.out.println("Calculando distancia entre las siguientes coordenadas:");
-        System.out.println("Coordenadas de la agencia: Lat: " + lat1 + ", Lon: " + lon1);
-        System.out.println("Coordenadas del vehículo: Lat: " + lat2 + ", Lon: " + lon2);
 
         // Convertir las coordenadas geográficas en un sistema de coordenadas plano (Euler XY)
         // Utilizamos un factor de escala de 111 km por grado de latitud

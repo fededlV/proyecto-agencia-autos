@@ -20,7 +20,7 @@ public class VehiculoController {
     public ResponseEntity<String> evaluarPosicion(@RequestBody Map<String, Object> posicion) {
         Double latitud = (Double) posicion.get("latitud");
         Double longitud = (Double) posicion.get("longitud");
-        Integer empleadoLegajo = ((Number) posicion.get("empleadoLegajo")).intValue(); // Convertir a Integer
+        Integer empleadoLegajo = ((Number) posicion.get("empleadoLegajo")).intValue();
 
         boolean resultado = notificacionService.evaluarPosicionVehiculo(latitud, longitud, empleadoLegajo);
 
