@@ -8,6 +8,7 @@ import org.fede.pruebas.entities.Empleado;
 import org.fede.pruebas.entities.Interesado;
 import org.fede.pruebas.entities.Prueba;
 import org.fede.pruebas.entities.Vehiculo;
+import org.fede.pruebas.exceptions.*;
 import org.fede.pruebas.repositories.EmpleadoRepository;
 import org.fede.pruebas.repositories.InteresadoRepository;
 import org.fede.pruebas.repositories.PruebaRepository;
@@ -51,13 +52,13 @@ public class PruebasServices {
 
         //Buscar las entidades relacionadas
         Vehiculo vehiculo = vehiculoRepository.findById(dto.idVehiculo())
-                .orElseThrow(() -> new EntityNotFoundException("El vehiculo no se encontro"));
+                .orElseThrow(() -> new VehiculoEnPruebaException("El vehiculo no se encontro"));
 
         Empleado empleado = empleadoRepository.findById(dto.idEmpleado())
-                .orElseThrow(() -> new EntityNotFoundException("El empleado no se encontro"));
+                .orElseThrow(() -> new EmpleadoNoEncontradoException("El empleado no se encontro"));
 
         Interesado interesado = interesadoRepository.findById(dto.idInteresado())
-                .orElseThrow(() -> new EntityNotFoundException("El interesado no se encontro"));
+                .orElseThrow(() -> new InteresadoNoEncontradoException("El interesado no se encontro"));
 
         //Convertir el DTO a la entidad
         Prueba prueba = mapper.toPrueba(dto);
@@ -75,7 +76,7 @@ public class PruebasServices {
         );
 
         if(estaEnPrueba) {
-            throw new RuntimeException("El vehiculo ya esta siendo probado en este momento");
+            throw new VehiculoEnPruebaException("El vehiculo ya esta siendo probado en este momento");
         }
 
         //Guarda la prueba
@@ -96,6 +97,10 @@ public class PruebasServices {
         //Llama al repositorio
         List<Prueba> pruebasEnCurso = repository.findByPruebasEnCurso(fechaHora);
 
+        if(pruebasEnCurso == null) {
+            throw new SinPruebasEnCursoException("No hay pruebas en curso en esa fecha y hora");
+        }
+
         //Convierte las pruebas en DTO
         return pruebasEnCurso.stream()
                 .map(mapper::toPruebaResponseDto)
@@ -105,15 +110,15 @@ public class PruebasServices {
     public PruebaResponseDto updatePrueba(Integer id, PruebaDto dto) {
         //1. Primero se busca la prueba.
         Prueba prueba = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("La prueba no se encontro"));
+                .orElseThrow(() -> new PruebaNoEncontradaException("La prueba no se encontro"));
 
         //2. se pasa a buscar los vehiculos
         Vehiculo vechiculo = vehiculoRepository.findById(dto.idVehiculo())
-                        .orElseThrow(() -> new EntityNotFoundException("La vehiculo no se encontro"));
+                        .orElseThrow(() -> new VehiculoNoEncontradoException("La vehiculo no se encontro"));
         Empleado empleado = empleadoRepository.findById(dto.idEmpleado())
-                        .orElseThrow(() -> new EntityNotFoundException("El empleado no se encontro"));
+                        .orElseThrow(() -> new EmpleadoNoEncontradoException("El empleado no se encontro"));
         Interesado interesado = interesadoRepository.findById(dto.idInteresado())
-                        .orElseThrow(() -> new EntityNotFoundException("El interesado no se encontro"));
+                        .orElseThrow(() -> new InteresadoNoEncontradoException("El interesado no se encontro"));
 
         //Actualizar los datos.
         prueba.setComentarios(dto.comentario());
@@ -131,19 +136,19 @@ public class PruebasServices {
         repository.deleteById(id);
     }
 
-    public void finalizaPrueba(Integer id, PruebaFinalizadaDto dto) {
+    public PruebaResponseDto finalizaPrueba(Integer id, PruebaFinalizadaDto dto) {
         //Buscar la prueba por ID
         Prueba prueba = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("La prueba no se encontro"));
+                .orElseThrow(() -> new PruebaNoEncontradaException("La prueba no se encontro"));
 
         //Verificar que la prueba este en curso
         if(prueba.getFechaHoraFin() != null) {
-            throw new RuntimeException("La prueba ya ha finalizado");
+            throw new PruebaNoEncontradaException("La prueba ya ha finalizado");
         }
 
         //Buscar el empleado y verificar existencia
         Empleado empleado = empleadoRepository.findById(dto.empleadoId())
-                .orElseThrow(() -> new EntityNotFoundException("El empleado no se encontro"));
+                .orElseThrow(() -> new EmpleadoNoEncontradoException("El empleado no se encontro"));
 
         //Actualizar la fecha de finalizacion y el comnentario
         prueba.setFechaHoraFin(LocalDateTime.now());
@@ -151,5 +156,6 @@ public class PruebasServices {
 
         //Guardar datos
         repository.save(prueba);
+        return mapper.toPruebaResponseDto(prueba);
     }
 }

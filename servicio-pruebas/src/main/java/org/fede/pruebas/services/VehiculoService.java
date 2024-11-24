@@ -5,6 +5,7 @@ import org.fede.pruebas.dto.VehiculoDto;
 import org.fede.pruebas.dto.VehiculoResponseDto;
 import org.fede.pruebas.entities.Modelo;
 import org.fede.pruebas.entities.Vehiculo;
+import org.fede.pruebas.exceptions.VehiculoNoEncontradoException;
 import org.fede.pruebas.repositories.ModeloRepository;
 import org.fede.pruebas.repositories.VehiculoRepository;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -43,7 +44,7 @@ public class VehiculoService {
     public VehiculoResponseDto updateVehiculo(Integer id, VehiculoDto dto) {
         //Busqueda de las entidades en la base de datos.
         Vehiculo vehiculo = vehiculoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("El vehiculo no se encontro"));
+                .orElseThrow(() -> new VehiculoNoEncontradoException("El vehiculo no se encontro"));
         Modelo modelo = modeloRepository.findById(dto.id_modelo())
                 .orElseThrow(() -> new EntityNotFoundException("El modelo no se encontro"));
 

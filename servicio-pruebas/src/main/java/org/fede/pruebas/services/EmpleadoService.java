@@ -3,6 +3,7 @@ package org.fede.pruebas.services;
 import jakarta.persistence.EntityNotFoundException;
 import org.fede.pruebas.dto.EmpleadoDto;
 import org.fede.pruebas.entities.Empleado;
+import org.fede.pruebas.exceptions.EmpleadoNoEncontradoException;
 import org.fede.pruebas.repositories.EmpleadoRepository;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +52,7 @@ public class EmpleadoService {
 
     public EmpleadoDto updateEmpleado(Integer legajo, EmpleadoDto empleadoDto) {
         Empleado empleado = empleadoRepository.findById(legajo)
-                .orElseThrow(() -> new EntityNotFoundException("El empleado no fue encontrado con legajo: " + legajo));
+                .orElseThrow(() -> new EmpleadoNoEncontradoException("El empleado no fue encontrado con legajo: " + legajo));
 
         empleado.setTelefono(empleadoDto.telefono_contacto());
         empleado.setNombre(empleadoDto.nombre());
