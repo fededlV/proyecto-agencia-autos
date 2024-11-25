@@ -1,0 +1,7 @@
+org\fede\pruebas\services\PruebasServicesTest.class
+org\fede\pruebas\services\InteresadoServiceTest.class
+org\fede\pruebas\services\VehiculoServiceTest.class
+org\fede\pruebas\services\NotificacionMapperTest.class
+org\fede\pruebas\services\NotificacionServiceTest.class
+org\fede\pruebas\PruebasApplicationTests.class
+org\fede\pruebas\services\PruebasMapperTest.class

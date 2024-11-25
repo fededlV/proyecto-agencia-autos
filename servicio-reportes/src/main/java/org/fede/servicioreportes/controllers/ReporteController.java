@@ -35,18 +35,18 @@ public class ReporteController {
     // Endpoint para obtener la cantidad de kilometros de prueba
     @GetMapping("/cantidadKilometros")
     public ResponseEntity<Double> calcularCantidadKilometros(
-            @RequestParam Integer vehiculoId,
-            @RequestParam LocalDateTime fechaInicio,
-            @RequestParam LocalDateTime fechaFin
+            @RequestBody Integer vehiculoId,
+            @RequestBody LocalDateTime fechaInicio,
+            @RequestBody LocalDateTime fechaFin
             ) {
         double kilometros = reporteService.calcularKilometrosRecorridos(vehiculoId, fechaInicio, fechaFin);
         return ResponseEntity.ok(kilometros); //Devuelve la cantidad de kilometros recorridos.
     }
 
     //Enpoint para pruebas por vehiculo
-    @GetMapping("/pruebasVehiculo")
+    @GetMapping("/pruebasVehiculo/{vehiculoId}")
     public ResponseEntity<List<PruebaResponseDTO>> obtenerPruebasPorVehiculo(
-            @RequestParam Integer vehiculoId
+            @PathVariable Integer vehiculoId
     ) {
         List<PruebaResponseDTO> pruebas = reporteService.obtenerPruebasPorVehiculo(vehiculoId);
         return ResponseEntity.ok(pruebas); //Devuelve la lista de pruebas realizadas
