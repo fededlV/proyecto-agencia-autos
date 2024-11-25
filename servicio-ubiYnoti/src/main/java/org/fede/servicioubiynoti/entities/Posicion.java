@@ -30,10 +30,15 @@ public class Posicion {
     }
 
     // Constructor con parámetros
-    public Posicion(double latitud, double longitud, LocalDateTime fechaHora) {
+    public Posicion(Vehiculo vehiculo, double latitud, double longitud, LocalDateTime fechaHora) {
+        this.vehiculo = vehiculo;
         this.latitud = latitud;
         this.longitud = longitud;
         this.fechaHora = fechaHora;
+    }
+
+    public Vehiculo getVehiculo() {
+        return vehiculo;
     }
 
     public double getLatitud() {
@@ -43,4 +48,5 @@ public class Posicion {
     public double getLongitud() {
         return longitud;
     }
+
 }

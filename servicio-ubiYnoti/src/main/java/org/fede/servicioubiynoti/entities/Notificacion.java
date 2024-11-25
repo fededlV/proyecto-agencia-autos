@@ -18,9 +18,8 @@ public class Notificacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "empleado_id", nullable = false)
-    private Empleado empleado;
+    @Column(name = "LEGAJO", nullable = false)
+    private Integer legajo;
 
     @Column(nullable = false)
     private String mensaje;
@@ -36,8 +35,8 @@ public class Notificacion {
     }
 
     // Constructor con parámetros
-    public Notificacion(Empleado empleado, String mensaje, LocalDateTime fechaEnvio, Boolean esIncidente) {
-        this.empleado = empleado;
+    public Notificacion(Integer legajo, String mensaje, LocalDateTime fechaEnvio, Boolean esIncidente) {
+        this.legajo = legajo;
         this.mensaje = mensaje;
         this.fechaEnvio = fechaEnvio;
         this.esIncidente = esIncidente;
