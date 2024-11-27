@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class NotificacionService {
@@ -44,9 +45,9 @@ public class NotificacionService {
 
         if (distancia > configuracion.getRadioAdmitidoKm() || enZonaRestringida(latitud, longitud, configuracion)) {
 
-            // Buscar el legajo del empleado asociado a la prueba activa
-            Integer legajoEmpleado = pruebaRepository.findLegajoEmpleadoPorPruebaActiva(id_vehiculo, fechaHora)
-                    .orElseThrow(() -> new IllegalArgumentException("No se encontró un empleado asociado a una prueba activa para este vehículo."));
+            Optional<Integer> legajo = pruebaRepository.findLegajoEmpleadoPorPruebaActiva(id_vehiculo, fechaHora);
+            Integer legajoEmpleado = legajo.orElseThrow(() -> new IllegalArgumentException("No se encontró un empleado asociado a una prueba activa para este vehículo."));
+
 
             // Crear y guardar la notificación
             Notificacion notificacion = new Notificacion();
