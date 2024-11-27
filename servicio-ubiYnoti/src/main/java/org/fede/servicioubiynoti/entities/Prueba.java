@@ -18,29 +18,29 @@ public class Prueba {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, name = "fecha_hora_inicio")
+    @Column(nullable = false, name = "FECHA_HORA_INICIO")
     private LocalDateTime fechaHoraInicio;
 
-    @Column(nullable = false, name = "fecha_hora_fin")
+    @Column(nullable = true, name = "FECHA_HORA_FIN")
     private LocalDateTime fechaHoraFin;
-
-    @Column(length = 500)
-    private String comentarios;
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name = "id_vehiculo")
+    @JoinColumn(name = "ID_VEHICULO") // Actualizado para coincidir con la base
     private Vehiculo vehiculo;
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name = "id_interesado")
+    @JoinColumn(name = "ID_INTERESADO")
     private Interesado interesado;
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name = "id_empleado")
+    @JoinColumn(name = "ID_EMPLEADO")
     private Empleado empleado;
+
+    @Column(length = 500)
+    private String comentarios;
 
     public Prueba() {
     }

@@ -18,10 +18,10 @@ public class Notificacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "LEGAJO", nullable = false)
+    @Column(name = "empleado_id", nullable = false)
     private Integer legajo;
 
-    @Column(nullable = false)
+    @Column(name = "mensaje",nullable = false)
     private String mensaje;
 
     @Column(name = "fecha_envio", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

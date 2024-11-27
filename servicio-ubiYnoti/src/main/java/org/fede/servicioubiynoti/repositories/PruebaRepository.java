@@ -10,7 +10,7 @@ import org.fede.servicioubiynoti.entities.Prueba;
 
 
 public interface PruebaRepository extends JpaRepository<Prueba, Integer> {
-    @Query("SELECT p.empleado.legajo FROM Prueba p WHERE p.vehiculo.id = :idVehiculo AND p.fechaHoraInicio <= :fechaHora AND p.fechaHoraFin IS NULL")
+    @Query("SELECT p.empleado.legajo FROM Prueba p WHERE p.vehiculo.id = :idVehiculo AND p.fechaHoraInicio >= :fechaHora AND p.fechaHoraFin IS NULL")
     Optional<Integer> findLegajoEmpleadoPorPruebaActiva(@Param("idVehiculo") Integer idVehiculo, @Param("fechaHora") LocalDateTime fechaHora);
 }
 
