@@ -5,6 +5,7 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pruebas/pom.xml" />
+        <option value="$PROJECT_DIR$/servicio-ubiYnoti/pom.xml" />
       </list>
     </option>
   </component>

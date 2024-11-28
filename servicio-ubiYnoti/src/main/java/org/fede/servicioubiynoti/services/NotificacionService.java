@@ -3,8 +3,11 @@ package org.fede.servicioubiynoti.services;
 import org.fede.servicioubiynoti.dto.ConfiguracionDTO;
 import org.fede.servicioubiynoti.entities.Notificacion;
 import org.fede.servicioubiynoti.entities.Empleado;
+import org.fede.servicioubiynoti.exceptions.EmpleadoNoEncontrado;
+import org.fede.servicioubiynoti.exceptions.VehiculoNoEncontrado;
 import org.fede.servicioubiynoti.repositories.NotificacionRepository;
 import org.fede.servicioubiynoti.repositories.PruebaRepository;
+import org.fede.servicioubiynoti.repositories.VehiculoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,11 +20,12 @@ public class NotificacionService {
     private final RestTemplate restTemplate;
     private final NotificacionRepository notificacionRepository;
     private final PruebaRepository pruebaRepository; // Nuevo repositorio
-
-    public NotificacionService(RestTemplate restTemplate, NotificacionRepository notificacionRepository, PruebaRepository pruebaRepository) {
+    private final VehiculoRepository vehiculoRepository;
+    public NotificacionService(RestTemplate restTemplate, NotificacionRepository notificacionRepository, PruebaRepository pruebaRepository, VehiculoRepository vehiculoRepository) {
         this.restTemplate = restTemplate;
         this.notificacionRepository = notificacionRepository;
         this.pruebaRepository = pruebaRepository; // Inicializar el repositorio
+        this.vehiculoRepository = vehiculoRepository;
     }
 
     public boolean evaluarPosicionVehiculo(Integer id_vehiculo, LocalDateTime fechaHora, Double latitud, Double longitud) {
@@ -45,9 +49,17 @@ public class NotificacionService {
 
         if (distancia > configuracion.getRadioAdmitidoKm() || enZonaRestringida(latitud, longitud, configuracion)) {
 
-            Optional<Integer> legajo = pruebaRepository.findLegajoEmpleadoPorPruebaActiva(id_vehiculo, fechaHora);
-            Integer legajoEmpleado = legajo.orElseThrow(() -> new IllegalArgumentException("No se encontró un empleado asociado a una prueba activa para este vehículo."));
+            Optional<Integer> vehiculo = vehiculoRepository.findIdByVehiculoId(id_vehiculo);
+            if (vehiculo.isEmpty()) {
+                throw new VehiculoNoEncontrado("No existe un vehículo en prueba con el ID proporcionado.");
+            }
 
+            Optional<Integer> legajo = pruebaRepository.findLegajoEmpleadoPorPruebaActiva(id_vehiculo, fechaHora);
+            if (legajo.isEmpty()) {
+                throw new EmpleadoNoEncontrado("No se encontró un empleado asignado a la prueba activa.");
+            }
+
+            Integer legajoEmpleado = legajo.get();
 
             // Crear y guardar la notificación
             Notificacion notificacion = new Notificacion();
