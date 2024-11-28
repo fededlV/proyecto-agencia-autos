@@ -1,23 +1,41 @@
 package org.fede.servicioubiynoti.controllers;
 
+import org.fede.servicioubiynoti.dto.PromocionRequestDTO;
 import org.fede.servicioubiynoti.services.NotificacionService;
+import org.fede.servicioubiynoti.services.PromocionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/vehiculos")
 public class VehiculoController {
 
-    private final NotificacionService notificacionService;
+    private final PromocionService promocionService; // Servicio para promociones
+    private final NotificacionService notificacionService; // Servicio para notificaciones generales
 
-    public VehiculoController(NotificacionService notificacionService) {
+    // Constructor para inyectar las dependencias
+    public VehiculoController(PromocionService promocionService, NotificacionService notificacionService) {
+        this.promocionService = promocionService;
         this.notificacionService = notificacionService;
     }
 
+    // Ruta para enviar promociones a múltiples teléfonos
+    @PostMapping("/enviar-promociones")
+    public ResponseEntity<String> enviarPromociones(@RequestBody PromocionRequestDTO promocionRequestDTO) {
+        boolean resultado = promocionService.enviarPromociones(promocionRequestDTO);
+
+        if (resultado) {
+            return ResponseEntity.ok("Promociones enviadas correctamente.");
+        } else {
+            return ResponseEntity.badRequest().body("No se encontraron empleados con los teléfonos proporcionados.");
+        }
+    }
+
+    // Ruta para evaluar la posición de un vehículo
     @PostMapping("/evaluar-posicion")
     public ResponseEntity<String> evaluarPosicion(@RequestBody Map<String, Object> posicion) {
         Integer id_vehiculo = ((Number) posicion.get("id_vehiculo")).intValue();
@@ -35,4 +53,3 @@ public class VehiculoController {
         }
     }
 }
-
