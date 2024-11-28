@@ -97,7 +97,8 @@ public class PruebasServices {
         //Llama al repositorio
         List<Prueba> pruebasEnCurso = repository.findByPruebasEnCurso(fechaHora);
 
-        if(pruebasEnCurso == null) {
+
+        if(pruebasEnCurso.isEmpty()) {
             throw new SinPruebasEnCursoException("No hay pruebas en curso en esa fecha y hora");
         }
 
@@ -151,6 +152,8 @@ public class PruebasServices {
                 .orElseThrow(() -> new EmpleadoNoEncontradoException("El empleado no se encontro"));
 
         //Actualizar la fecha de finalizacion y el comnentario
+        System.out.println(dto.comentario());
+        System.out.println(dto.empleadoId());
         prueba.setFechaHoraFin(LocalDateTime.now());
         prueba.setComentarios(dto.comentario());
 

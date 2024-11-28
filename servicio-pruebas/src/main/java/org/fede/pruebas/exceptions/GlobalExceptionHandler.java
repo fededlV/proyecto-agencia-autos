@@ -53,4 +53,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> manejarSinPruebasEnCurso(SinPruebasEnCursoException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(RolNoHabilitado.class)
+    public ResponseEntity<String> manenjarRolNoHabilitado(RolNoHabilitado e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

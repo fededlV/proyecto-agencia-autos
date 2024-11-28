@@ -19,4 +19,6 @@ public interface PruebaRepository extends JpaRepository<Prueba, Integer> {
     //Query que realiza la busqueda en la base de datos y devuelve las pruebas que cumplen con esas condiciones, Query JPQL
     @Query("SELECT p FROM Prueba p WHERE p.fechaHoraInicio <= :fechaHora AND p.fechaHoraFin IS NULL")
     List<Prueba> findByPruebasEnCurso(@Param("fechaHora")LocalDateTime fechaHora);
+
+
 }

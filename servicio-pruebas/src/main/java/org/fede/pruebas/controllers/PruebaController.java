@@ -49,7 +49,7 @@ public class PruebaController {
         return new ResponseEntity<>(pruebaCreate, HttpStatus.CREATED);
     }
 
-    @PutMapping("/finalizar")
+    @PutMapping("/finalizar/{id}")
     public ResponseEntity<PruebaResponseDto> finalizarPrueba(
             @Valid @RequestBody PruebaFinalizadaDto pruebaDto, @PathVariable Integer id
     ) {

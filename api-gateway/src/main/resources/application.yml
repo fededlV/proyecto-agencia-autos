@@ -5,6 +5,26 @@ spring:
   application:
     name: api-gateway
 
+  cloud:
+    gateway:
+      routes:
+        - id: servicio-pruebas
+          uri: ${url.microservicio.pruebas}
+          predicates:
+            - Path=/api/pruebas/**
+        - id: servicio-notificaciones
+          uri: ${url.microservicio.notificaciones}
+          predicates:
+            - Path=/api/notificaciones/**
+        - id: servicio-posiciones
+          uri: ${url.microservicio.posiciones}
+          predicates:
+            - Path=/api/posiciones/**
+        - id: servicio-reportes
+          uri: ${url.microservicio.reportes}
+          predicates:
+            - Path=/api/reportes/**
+
   security:
     oauth2:
       resourceserver:
@@ -36,3 +56,5 @@ url:
     notificaciones: http://localhost:8083
     posiciones: http://localhost:8083
     reportes: http://localhost:8084
+
+
