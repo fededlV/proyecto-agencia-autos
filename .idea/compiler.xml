@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="pruebas" />
         <module name="api-gateway" />
+        <module name="servicio-ubiYnoti" />
         <module name="servicio-reportes" />
       </profile>
     </annotationProcessing>
@@ -18,6 +19,7 @@
       <module name="api-gateway" options="-parameters" />
       <module name="pruebas" options="-parameters" />
       <module name="servicio-reportes" options="-parameters" />
+      <module name="servicio-ubiYnoti" options="-parameters" />
     </option>
   </component>
 </project>
