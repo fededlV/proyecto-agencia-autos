@@ -47,12 +47,6 @@ public class SecurityConfig  {
         return http.build();
     }
 
-    private JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        converter.setAuthorityExtractor(new JwtGrantedAuthoritiesExtractor());
-        return converter;
-    }
-
     @Bean
     public JwtDecoder jwtDecoder() {
         return JwtDecoders.fromIssuerLocation("https://labsys.frc.utn.edu.ar/aim/realms/backend-tps");
