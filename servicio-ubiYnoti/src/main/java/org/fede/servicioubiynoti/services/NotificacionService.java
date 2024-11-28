@@ -3,6 +3,7 @@ package org.fede.servicioubiynoti.services;
 import org.fede.servicioubiynoti.dto.ConfiguracionDTO;
 import org.fede.servicioubiynoti.entities.Notificacion;
 import org.fede.servicioubiynoti.exceptions.VehiculoNoEncontrado;
+import org.fede.servicioubiynoti.exceptions.EmpleadoNoEncontrado;
 import org.fede.servicioubiynoti.repositories.NotificacionRepository;
 import org.fede.servicioubiynoti.repositories.PruebaRepository;
 import org.fede.servicioubiynoti.repositories.VehiculoRepository;

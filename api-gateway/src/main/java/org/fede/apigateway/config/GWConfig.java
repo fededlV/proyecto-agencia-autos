@@ -18,7 +18,7 @@ public class GWConfig {
     ) {
         return builder.routes()
                 .route(p -> p.path("/api/pruebas/**").uri(uriPruebas))
-                .route(p -> p.path("/api/notificaciones/**").uri(uriNotificaciones))
+                .route(p -> p.path("/api/vehiculos/**").uri(uriNotificaciones))
                 .route(p -> p.path("/api/reportes/**").uri(uriReportes))
                 .route(p -> p.path("/api/posiciones/**").uri(uriPosiciones))
                 .build();
